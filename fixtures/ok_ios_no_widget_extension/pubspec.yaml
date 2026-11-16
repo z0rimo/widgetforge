@@ -1,0 +1,8 @@
+name: demo
+description: WidgetForge fixture (ok_ios_no_widget_extension).
+environment:
+  sdk: ^3.5.0
+dependencies:
+  flutter:
+    sdk: flutter
+  home_widget: ^0.7.0

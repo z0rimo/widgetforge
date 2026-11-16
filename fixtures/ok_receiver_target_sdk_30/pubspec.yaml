@@ -1,0 +1,8 @@
+name: demo
+description: WidgetForge fixture (ok_receiver_target_sdk_30).
+environment:
+  sdk: ^3.5.0
+dependencies:
+  flutter:
+    sdk: flutter
+  home_widget: ^0.7.0

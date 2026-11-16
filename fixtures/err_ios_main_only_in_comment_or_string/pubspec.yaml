@@ -1,0 +1,8 @@
+name: demo
+description: WidgetForge fixture (err_ios_main_only_in_comment_or_string).
+environment:
+  sdk: ^3.5.0
+dependencies:
+  flutter:
+    sdk: flutter
+  home_widget: ^0.7.0

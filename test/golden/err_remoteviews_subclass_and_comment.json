@@ -1,0 +1,24 @@
+[
+  {
+    "code": "WF1001",
+    "severity": "error",
+    "title": "View not supported by RemoteViews",
+    "message": "<androidx.appcompat.widget.AppCompatTextView> is not one of the classes RemoteViews can inflate (documented list; android.jar @RemoteView annotations on API 34-36). Subclasses of supported views and custom views are not supported either. This check is static: it was not run on a device or emulator, and inflation success cannot be inferred from a successful build.",
+    "file": "android/app/src/main/res/layout/demo_widget.xml",
+    "line": 7,
+    "evidence": "<androidx.appcompat.widget.AppCompatTextView",
+    "fix": "Replace <androidx.appcompat.widget.AppCompatTextView> with a supported view (FrameLayout, LinearLayout, RelativeLayout, GridLayout, TextView, ImageView, Button, ImageButton, ProgressBar, Chronometer, TextClock, AnalogClock, ListView, GridView, StackView, ViewFlipper, AdapterViewFlipper).",
+    "docs": "docs/errors/WF1001.md"
+  },
+  {
+    "code": "WF1001",
+    "severity": "error",
+    "title": "View not supported by RemoteViews",
+    "message": "<view> is not one of the classes RemoteViews can inflate (documented list; android.jar @RemoteView annotations on API 34-36). Subclasses of supported views and custom views are not supported either. This check is static: it was not run on a device or emulator, and inflation success cannot be inferred from a successful build.",
+    "file": "android/app/src/main/res/layout/demo_widget.xml",
+    "line": 10,
+    "evidence": "<view class=\"androidx.cardview.widget.CardView\"",
+    "fix": "Replace with FrameLayout and a shape drawable background (rounded corners via android:background).",
+    "docs": "docs/errors/WF1001.md"
+  }
+]

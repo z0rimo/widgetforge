@@ -1,0 +1,36 @@
+# --- Dart / pub ---
+.dart_tool/
+.packages
+pubspec_overrides.yaml
+# pubspec.lock is tracked on purpose (this is an application/CLI package)
+
+# --- Build outputs, snapshots, local executables ---
+build/
+*.snapshot
+/widgetforge
+/widgetforge.exe
+coverage/
+
+# --- Logs and temporary files ---
+*.log
+*.tmp
+*.bak
+*.swp
+*~
+/tmp/
+
+# --- Local environment and settings (examples stay trackable) ---
+.env
+.env.*
+!.env.example
+*.local
+
+# --- OS / editor generated files ---
+.DS_Store
+Thumbs.db
+.idea/
+*.iml
+.vscode/
+
+# --- Stray local Gradle caches ---
+.gradle/

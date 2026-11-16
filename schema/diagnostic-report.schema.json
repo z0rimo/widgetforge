@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/z0rimo/widgetforge/v0.1.0/schema/diagnostic-report.schema.json",
+  "title": "WidgetForge doctor report",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "tool",
+    "projectPath",
+    "summary",
+    "checksRun",
+    "notes",
+    "diagnostics"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": {
+      "const": "1"
+    },
+    "tool": {
+      "type": "object",
+      "required": [
+        "name",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "const": "widgetforge"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "projectPath": {
+      "type": "string"
+    },
+    "summary": {
+      "type": "object",
+      "required": [
+        "errors",
+        "warnings",
+        "infos"
+      ],
+      "properties": {
+        "errors": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "warnings": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "infos": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "checksRun": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "diagnostics": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "code",
+          "severity",
+          "title",
+          "message",
+          "file",
+          "line",
+          "evidence",
+          "fix",
+          "docs"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "string",
+            "pattern": "^WF[0-9]{4}$",
+            "description": "Rule ID. Format only: the schema does not check that the ID exists; see rule-catalog.json for the IDs of this version."
+          },
+          "severity": {
+            "enum": [
+              "error",
+              "warning",
+              "info"
+            ]
+          },
+          "title": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "file": {
+            "type": "string",
+            "description": "Path relative to project root"
+          },
+          "line": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 1
+          },
+          "evidence": {
+            "type": "string"
+          },
+          "fix": {
+            "type": "string"
+          },
+          "docs": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+name: demo
+description: WidgetForge fixture (ok_provider_java_fqcn).
+environment:
+  sdk: ^3.5.0
+dependencies:
+  flutter:
+    sdk: flutter
+  home_widget: ^0.7.0

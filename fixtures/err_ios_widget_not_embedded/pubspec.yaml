@@ -1,0 +1,8 @@
+name: demo
+description: WidgetForge fixture (err_ios_widget_not_embedded).
+environment:
+  sdk: ^3.5.0
+dependencies:
+  flutter:
+    sdk: flutter
+  home_widget: ^0.7.0

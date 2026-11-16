@@ -1,0 +1,13 @@
+[
+  {
+    "code": "WF4002",
+    "severity": "error",
+    "title": "Dart entrypoint lacks @pragma('vm:entry-point')",
+    "message": "widgetMain() is declared but not annotated; the Flutter documentation requires the annotation so a non-main entrypoint is not tree-shaken in AOT builds (observed with a release build of an isolated sample on Flutter 3.32.0: the unannotated function was absent from libapp.so).",
+    "file": "lib/main.dart",
+    "line": 5,
+    "evidence": "widgetMain() without @pragma",
+    "fix": "Add @pragma('vm:entry-point') to the declaration of widgetMain().",
+    "docs": "docs/errors/WF4002.md"
+  }
+]

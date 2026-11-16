@@ -1,0 +1,267 @@
+{
+  "catalogVersion": "1",
+  "description": "Rule IDs implemented by this version of WidgetForge. The report schema validates only the ID format; this catalog says which IDs exist and what they are. maturity: 'tested' = covered by fixtures/real-build comparisons described in the rule's page; 'experimental' = iOS, not verified with Xcode or a real Apple build.",
+  "rules": [
+    {
+      "id": "WF1001",
+      "platform": "android",
+      "command": "doctor",
+      "severity": "error",
+      "maturity": "tested",
+      "title": "View not supported by RemoteViews",
+      "docs": "docs/errors/WF1001.md"
+    },
+    {
+      "id": "WF2001",
+      "platform": "android",
+      "command": "doctor",
+      "severity": "error",
+      "maturity": "tested",
+      "title": "AppWidgetProvider is not registered in AndroidManifest.xml",
+      "docs": "docs/errors/WF2001.md"
+    },
+    {
+      "id": "WF2002",
+      "platform": "android",
+      "command": "doctor",
+      "severity": "error",
+      "maturity": "tested",
+      "title": "Widget receiver lacks APPWIDGET_UPDATE intent-filter",
+      "docs": "docs/errors/WF2002.md"
+    },
+    {
+      "id": "WF2003",
+      "platform": "android",
+      "command": "doctor",
+      "severity": "error",
+      "maturity": "tested",
+      "title": "Widget receiver lacks android.appwidget.provider meta-data",
+      "docs": "docs/errors/WF2003.md"
+    },
+    {
+      "id": "WF2004",
+      "platform": "android",
+      "command": "doctor",
+      "severity": "error",
+      "maturity": "tested",
+      "title": "Widget receiver with intent-filter lacks android:exported",
+      "docs": "docs/errors/WF2004.md"
+    },
+    {
+      "id": "WF3001",
+      "platform": "android",
+      "command": "doctor",
+      "severity": "error",
+      "maturity": "tested",
+      "title": "Widget provider XML not found / invalid",
+      "docs": "docs/errors/WF3001.md"
+    },
+    {
+      "id": "WF3002",
+      "platform": "android",
+      "command": "doctor",
+      "severity": "error",
+      "maturity": "tested",
+      "title": "appwidget-provider lacks android:initialLayout",
+      "docs": "docs/errors/WF3002.md"
+    },
+    {
+      "id": "WF3003",
+      "platform": "android",
+      "command": "doctor",
+      "severity": "error",
+      "maturity": "tested",
+      "title": "Widget layout resource not found",
+      "docs": "docs/errors/WF3003.md"
+    },
+    {
+      "id": "WF3004",
+      "platform": "android",
+      "command": "doctor",
+      "severity": "error",
+      "maturity": "tested",
+      "title": "Widget configure activity is not registered",
+      "docs": "docs/errors/WF3004.md"
+    },
+    {
+      "id": "WF4001",
+      "platform": "android",
+      "command": "doctor",
+      "severity": "error",
+      "maturity": "tested",
+      "title": "Dart entrypoint named by FlutterActivity not found",
+      "docs": "docs/errors/WF4001.md"
+    },
+    {
+      "id": "WF4002",
+      "platform": "android",
+      "command": "doctor",
+      "severity": "error",
+      "maturity": "tested",
+      "title": "Dart entrypoint lacks @pragma('vm:entry-point')",
+      "docs": "docs/errors/WF4002.md"
+    },
+    {
+      "id": "WF4003",
+      "platform": "android",
+      "command": "doctor",
+      "severity": "error",
+      "maturity": "tested",
+      "title": "FlutterActivity subclass is not registered in the manifest",
+      "docs": "docs/errors/WF4003.md"
+    },
+    {
+      "id": "WF5001",
+      "platform": "ios",
+      "command": "doctor",
+      "severity": "error",
+      "maturity": "experimental",
+      "title": "Widget extension is not embedded in an app target",
+      "docs": "docs/errors/WF5001.md"
+    },
+    {
+      "id": "WF5002",
+      "platform": "ios",
+      "command": "doctor",
+      "severity": "error",
+      "maturity": "experimental",
+      "title": "Widget extension Info.plist does not declare the WidgetKit extension point",
+      "docs": "docs/errors/WF5002.md"
+    },
+    {
+      "id": "WF5003",
+      "platform": "ios",
+      "command": "doctor",
+      "severity": "error",
+      "maturity": "experimental",
+      "title": "Widget extension Info.plist is missing or invalid",
+      "docs": "docs/errors/WF5003.md"
+    },
+    {
+      "id": "WF5004",
+      "platform": "ios",
+      "command": "doctor",
+      "severity": "error",
+      "maturity": "experimental",
+      "title": "Widget extension bundle identifier is not prefixed with the app bundle identifier",
+      "docs": "docs/errors/WF5004.md"
+    },
+    {
+      "id": "WF5005",
+      "platform": "ios",
+      "command": "doctor",
+      "severity": "error",
+      "maturity": "experimental",
+      "title": "Entitlements file referenced by the target does not exist",
+      "docs": "docs/errors/WF5005.md"
+    },
+    {
+      "id": "WF5006",
+      "platform": "ios",
+      "command": "doctor",
+      "severity": "error",
+      "maturity": "experimental",
+      "title": "App Group mismatch between app and widget extension",
+      "docs": "docs/errors/WF5006.md"
+    },
+    {
+      "id": "WF5007",
+      "platform": "ios",
+      "command": "doctor",
+      "severity": "error",
+      "maturity": "experimental",
+      "title": "Widget extension has no @main entry point",
+      "docs": "docs/errors/WF5007.md"
+    },
+    {
+      "id": "WF5008",
+      "platform": "ios",
+      "command": "doctor",
+      "severity": "error",
+      "maturity": "experimental",
+      "title": "Widget extension deployment target is below iOS 14",
+      "docs": "docs/errors/WF5008.md"
+    },
+    {
+      "id": "WF6001",
+      "platform": "android",
+      "command": "verify",
+      "severity": "error",
+      "maturity": "tested",
+      "title": "Widget receiver without android:exported in the built APK",
+      "docs": "docs/errors/WF6001.md"
+    },
+    {
+      "id": "WF6002",
+      "platform": "android",
+      "command": "verify",
+      "severity": "error",
+      "maturity": "tested",
+      "title": "Widget receiver without android.appwidget.provider meta-data in the built APK",
+      "docs": "docs/errors/WF6002.md"
+    },
+    {
+      "id": "WF6003",
+      "platform": "android",
+      "command": "verify",
+      "severity": "error",
+      "maturity": "tested",
+      "title": "Provider XML referenced by the built APK is missing",
+      "docs": "docs/errors/WF6003.md"
+    },
+    {
+      "id": "WF6004",
+      "platform": "android",
+      "command": "verify",
+      "severity": "error",
+      "maturity": "tested",
+      "title": "Provider XML in the built APK has no android:initialLayout",
+      "docs": "docs/errors/WF6004.md"
+    },
+    {
+      "id": "WF6005",
+      "platform": "android",
+      "command": "verify",
+      "severity": "error",
+      "maturity": "tested",
+      "title": "initialLayout referenced by the built APK is missing",
+      "docs": "docs/errors/WF6005.md"
+    },
+    {
+      "id": "WF7001",
+      "platform": "ios",
+      "command": "verify",
+      "severity": "error",
+      "maturity": "experimental",
+      "title": "Info.plist in the IPA is missing, unreadable or lacks a required key",
+      "docs": "docs/errors/WF7001.md"
+    },
+    {
+      "id": "WF7002",
+      "platform": "ios",
+      "command": "verify",
+      "severity": "warning",
+      "maturity": "experimental",
+      "title": "Widget extension bundle identifier is not prefixed with the app bundle identifier (IPA)",
+      "docs": "docs/errors/WF7002.md"
+    },
+    {
+      "id": "WF7003",
+      "platform": "ios",
+      "command": "verify",
+      "severity": "error",
+      "maturity": "experimental",
+      "title": "Widget extension executable is missing from the IPA",
+      "docs": "docs/errors/WF7003.md"
+    },
+    {
+      "id": "WF7004",
+      "platform": "ios",
+      "command": "verify",
+      "severity": "warning",
+      "maturity": "experimental",
+      "title": "Widget extension MinimumOSVersion is below iOS 14 (IPA)",
+      "docs": "docs/errors/WF7004.md"
+    }
+  ]
+}

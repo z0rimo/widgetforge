@@ -1,0 +1,13 @@
+[
+  {
+    "code": "WF2001",
+    "severity": "error",
+    "title": "AppWidgetProvider is not registered in AndroidManifest.xml",
+    "message": "DemoWidgetProvider extends BaseProvider (an AppWidget provider) but no <receiver> in any manifest of android/app/src/* names com.example.demo.DemoWidgetProvider, so the widget will not appear in the launcher widget picker. Only manifests of the project's own source sets were read; the merged manifest was not computed.",
+    "file": "android/app/src/main/kotlin/com/example/demo/DemoWidgetProvider.kt",
+    "line": 7,
+    "evidence": "class DemoWidgetProvider : BaseProvider()",
+    "fix": "Add inside <application> of android/app/src/main/AndroidManifest.xml: <receiver android:name=\"com.example.demo.DemoWidgetProvider\" android:exported=\"true\"><intent-filter><action android:name=\"android.appwidget.action.APPWIDGET_UPDATE\"/></intent-filter><meta-data android:name=\"android.appwidget.provider\" android:resource=\"@xml/YOUR_WIDGET_INFO\"/></receiver>",
+    "docs": "docs/errors/WF2001.md"
+  }
+]

@@ -1,0 +1,284 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 54;
+	objects = {
+		00000000000000000000000C = {
+			isa = PBXFileReference;
+			explicitFileType = wrapper.application;
+			path = Runner.app;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		00000000000000000000000D = {
+			isa = PBXFileReference;
+			explicitFileType = "wrapper.app-extension";
+			path = WidgetExt.appex;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		000000000000000000000014 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = AppDelegate.swift;
+			sourceTree = "<group>";
+		};
+		000000000000000000000015 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			path = Info.plist;
+			sourceTree = "<group>";
+		};
+		000000000000000000000016 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.entitlements;
+			path = Runner.entitlements;
+			sourceTree = "<group>";
+		};
+		000000000000000000000017 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.xcconfig;
+			path = Debug.xcconfig;
+			sourceTree = "<group>";
+		};
+		000000000000000000000018 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.xcconfig;
+			path = Release.xcconfig;
+			sourceTree = "<group>";
+		};
+		00000000000000000000001E = {
+			isa = PBXBuildFile;
+			fileRef = 000000000000000000000014;
+		};
+		00000000000000000000000E = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				00000000000000000000001E,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		000000000000000000000019 = {
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.swift;
+			path = WidgetExt.swift;
+			sourceTree = "<group>";
+		};
+		00000000000000000000001A = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			path = Info.plist;
+			sourceTree = "<group>";
+		};
+		00000000000000000000001B = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.entitlements;
+			path = WidgetExt.entitlements;
+			sourceTree = "<group>";
+		};
+		00000000000000000000001F = {
+			isa = PBXBuildFile;
+			fileRef = 000000000000000000000019;
+		};
+		000000000000000000000020 = {
+			isa = PBXBuildFile;
+			fileRef = 00000000000000000000000D;
+			settings = {
+				ATTRIBUTES = (
+					RemoveHeadersOnCopy,
+				);
+			};
+		};
+		000000000000000000000010 = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				00000000000000000000001F,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		00000000000000000000000F = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				000000000000000000000020,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		000000000000000000000005 = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000000017,
+				000000000000000000000018,
+			);
+			path = Flutter;
+			sourceTree = "<group>";
+		};
+		000000000000000000000004 = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000000014,
+				000000000000000000000015,
+				000000000000000000000016,
+			);
+			path = Runner;
+			sourceTree = "<group>";
+		};
+		000000000000000000000006 = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000000019,
+				00000000000000000000001A,
+				00000000000000000000001B,
+			);
+			path = WidgetExt;
+			sourceTree = "<group>";
+		};
+		000000000000000000000003 = {
+			isa = PBXGroup;
+			children = (
+				00000000000000000000000C,
+				00000000000000000000000D,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		000000000000000000000002 = {
+			isa = PBXGroup;
+			children = (
+				000000000000000000000005,
+				000000000000000000000004,
+				000000000000000000000006,
+				000000000000000000000003,
+			);
+			sourceTree = "<group>";
+		};
+		00000000000000000000002B = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+			};
+			name = Debug;
+		};
+		00000000000000000000002C = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+			};
+			name = Release;
+		};
+		000000000000000000000028 = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				00000000000000000000002B,
+				00000000000000000000002C,
+			);
+			defaultConfigurationName = Release;
+		};
+		00000000000000000000002D = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = Runner/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.demo;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
+			};
+			name = Debug;
+			baseConfigurationReference = 000000000000000000000017;
+		};
+		00000000000000000000002E = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				INFOPLIST_FILE = Runner/Info.plist;
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.demo;
+				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
+			};
+			name = Release;
+			baseConfigurationReference = 000000000000000000000018;
+		};
+		000000000000000000000029 = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				00000000000000000000002D,
+				00000000000000000000002E,
+			);
+			defaultConfigurationName = Release;
+		};
+		00000000000000000000000A = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 000000000000000000000029;
+			buildPhases = (
+				00000000000000000000000E,
+				00000000000000000000000F,
+			);
+			dependencies = (
+			);
+			name = Runner;
+			productName = Runner;
+			productReference = 00000000000000000000000C;
+			productType = "com.apple.product-type.application";
+		};
+		00000000000000000000002F = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.demo.DemoWidget;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				INFOPLIST_FILE = WidgetExt/Info.plist;
+				CODE_SIGN_ENTITLEMENTS = WidgetExt/WidgetExt.entitlements;
+			};
+			name = Debug;
+		};
+		000000000000000000000030 = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_BUNDLE_IDENTIFIER = com.example.demo.DemoWidget;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				INFOPLIST_FILE = WidgetExt/Info.plist;
+				CODE_SIGN_ENTITLEMENTS = WidgetExt/WidgetExt.entitlements;
+			};
+			name = Release;
+		};
+		00000000000000000000002A = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				00000000000000000000002F,
+				000000000000000000000030,
+			);
+			defaultConfigurationName = Release;
+		};
+		00000000000000000000000B = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 00000000000000000000002A;
+			buildPhases = (
+				000000000000000000000010,
+			);
+			dependencies = (
+			);
+			name = WidgetExt;
+			productName = WidgetExt;
+			productReference = 00000000000000000000000D;
+			productType = "com.apple.product-type.app-extension";
+		};
+		000000000000000000000001 = {
+			isa = PBXProject;
+			buildConfigurationList = 000000000000000000000028;
+			compatibilityVersion = "Xcode 9.3";
+			mainGroup = 000000000000000000000002;
+			productRefGroup = 000000000000000000000003;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				00000000000000000000000A,
+				00000000000000000000000B,
+			);
+		};
+	};
+	rootObject = 000000000000000000000001;
+}

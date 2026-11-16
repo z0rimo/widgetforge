@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <AbsoluteLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <android.widget.TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <requestFocus/>
+        <tag android:id="@+id/t" android:value="v"/>
+    </android.widget.TextView>
+    <view class="android.widget.ImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <ViewStub
+        android:layout="@layout/stub_ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</FrameLayout>

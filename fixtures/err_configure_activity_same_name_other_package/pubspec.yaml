@@ -1,0 +1,8 @@
+name: demo
+description: WidgetForge fixture (err_configure_activity_same_name_other_package).
+environment:
+  sdk: ^3.5.0
+dependencies:
+  flutter:
+    sdk: flutter
+  home_widget: ^0.7.0

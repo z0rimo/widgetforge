@@ -1,0 +1,3 @@
+#include "Generated.xcconfig"
+APP_BUNDLE_ID = com.example.demo
+WIDGET_MIN_OS = 14.0

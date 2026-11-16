@@ -1,0 +1,8 @@
+name: demo
+description: WidgetForge fixture (err_receiver_debug_only_unsupported_view).
+environment:
+  sdk: ^3.5.0
+dependencies:
+  flutter:
+    sdk: flutter
+  home_widget: ^0.7.0
