@@ -19,7 +19,7 @@ iOS-only and combined Flutter projects are supported; a platform whose project f
 It does not replace [`home_widget`](https://pub.dev/packages/home_widget). It does not depend on any
 widget package and also works for hand-written native widgets. It never modifies the project it inspects.
 
-> **Status: v0.1.0, not yet published.** No public release or pub.dev package exists. <!-- PRIVATE-ONLY:start -->The GitHub repository `https://github.com/z0rimo/widgetforge` is currently **private**, so the GitHub links here work only for accounts with access.<!-- PRIVATE-ONLY:end --> Android checks are the most verified; iOS rules were exercised on one Xcode 26.6 / iOS 26.5 simulator sample ([docs/ios-validation.md](docs/ios-validation.md)); IPA verification is Experimental. Licensed under the [MIT License](LICENSE).
+> **Status: v0.1.0, not yet published.** No public release or pub.dev package exists. Android checks are the most verified; iOS rules were exercised on one Xcode 26.6 / iOS 26.5 simulator sample ([docs/ios-validation.md](docs/ios-validation.md)); IPA verification is Experimental. Licensed under the [MIT License](LICENSE).
 
 ## At a glance
 
@@ -34,7 +34,7 @@ widget package and also works for hand-written native widgets. It never modifies
 
 Requires a Dart SDK that satisfies `environment.sdk` in `pubspec.yaml` (`^3.5.0`, i.e. Dart 3.5 or newer and below 4.0).
 **Main verification: Dart 3.8.0 (Flutter 3.32.0) on Linux.** On Dart 3.5.4 (Linux) `dart analyze` was clean and all 302 tests passed once; Dart 3.5.0 itself and other platforms were not tested.
-From a checkout of this repository (`git clone https://github.com/z0rimo/widgetforge.git`<!-- PRIVATE-ONLY:start -->; requires access while the repository is private<!-- PRIVATE-ONLY:end -->). A fresh clone of the repository was checked with Dart 3.8.0 (`dart pub get`, `dart analyze`, `dart test`, the commands below):
+From a checkout of this repository (`git clone https://github.com/z0rimo/widgetforge.git`). A fresh clone of the repository was checked with Dart 3.8.0 (`dart pub get`, `dart analyze`, `dart test`, the commands below):
 
 ```sh
 dart pub get
@@ -58,7 +58,7 @@ The first two rows were verified to meet that in every run tested (Dart SDK 3.8.
 |-----|--------|
 | `dart run bin/widgetforge.dart ...` | **Verified.** The supported development path. |
 | Native executable (JSON automation) | **Verified.** Build once, then call the binary directly: `dart pub get && mkdir -p build && dart compile exe bin/widgetforge.dart -o build/widgetforge`, then `build/widgetforge doctor --json <path>`. Same stdout and exit codes as `dart run`. |
-| `dart pub global activate --source git https://github.com/z0rimo/widgetforge.git` | **Not verified against the GitHub repository** (<!-- PRIVATE-ONLY:start -->private, <!-- PRIVATE-ONLY:end -->not yet tested). The same mechanism was verified only against a throw-away local git repository (clean JSON, 3 consecutive runs, Dart 3.8.0). After publication, re-run it against the real URL and check that stdout is one JSON document before relying on it. |
+| `dart pub global activate --source git https://github.com/z0rimo/widgetforge.git` | **Not verified against the GitHub repository** (not yet tested). The same mechanism was verified only against a throw-away local git repository (clean JSON, 3 consecutive runs, Dart 3.8.0). After publication, re-run it against the real URL and check that stdout is one JSON document before relying on it. |
 | `dart pub global activate --source path .` | **Not recommended for `--json`.** On Dart SDK 3.8.0 the generated launcher can print pub's `Resolving dependencies...` output to stdout in front of the JSON (see below). |
 | pub.dev (`dart pub global activate widgetforge`) | **Not verified.** The package is not published; no behaviour is guaranteed. |
 

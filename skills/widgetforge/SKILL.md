@@ -13,7 +13,7 @@ Do **not** use for: ordinary Flutter widget-tree layout issues, Live Activities 
 
 ## 1. Find the tool
 
-Do not assume WidgetForge is installed or published (v0.1.0 is not on pub.dev, and the GitHub repository `z0rimo/widgetforge` is private for now; ask the user where their WidgetForge checkout is). Use a checkout:
+Do not assume WidgetForge is installed or published (v0.1.0 is not on pub.dev; its source is at `https://github.com/z0rimo/widgetforge`; ask the user where their WidgetForge checkout is). Use a checkout:
 
 ```sh
 dart pub get                                  # inside the WidgetForge checkout
