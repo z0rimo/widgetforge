@@ -1,8 +1,8 @@
 # Changelog
 
-## 0.1.0 - in development (first public release on hold)
+## 0.1.0
 
-First implementation. Release date to be set when the `v0.1.0` tag is created. Not published to GitHub or pub.dev at the time of writing.
+First implementation. Not published to pub.dev (`publish_to: none`).
 
 - Report schema: `diagnostics[].code` is validated by the pattern `^WF[0-9]{4}$` instead of an enum (it no longer checks that an ID exists); `schemaVersion` stays `"1"`. New `schema/rule-catalog.json` lists the 29 implemented rules and is checked against the code, `docs/errors/` and the README by tests.
 - WF7002 and WF7004 (IPA `verify`) have `warning` severity (exit code unchanged) with the unverified basis stated in their message and evidence; IPA verification is Experimental.
@@ -36,13 +36,13 @@ First implementation. Release date to be set when the `v0.1.0` tag is created. N
   - WF3004 compares fully-qualified class names (namespace-aware) instead of simple names; message states the documented basis.
   - A Dart entrypoint library not reachable from `lib/main.dart` through import/export/part is reported in `notes`.
   - 11 more fixtures, extended `test/accuracy_test.dart`.
-- Release metadata: `repository` in `pubspec.yaml` and the JSON Schema `$id` now use the planned GitHub location
-  (`https://github.com/z0rimo/widgetforge`, `.../v0.1.0/schema/diagnostic-report.schema.json`). They resolve only after
-  the repository exists and the `v0.1.0` tag is pushed. `publish_to: none` is unchanged.
+- Release metadata: `repository` in `pubspec.yaml` and the JSON Schema `$id` now use the GitHub location
+  (`https://github.com/z0rimo/widgetforge`, `.../v0.1.0/schema/diagnostic-report.schema.json`). The `$id` resolves only once
+  the `v0.1.0` tag exists. `publish_to: none` is unchanged.
 - `docs/errors/WF1001`, `WF2004`, `WF3004`: Android documentation sources added; runtime-symptom wording aligned with the README.
 - iOS WidgetKit static diagnostics WF5001-WF5008 (embedding, extension Info.plist, bundle identifier prefix, entitlements,
   App Groups, `@main`, deployment target) from `project.pbxproj`, `.xcconfig`, XML plists and Swift sources; 26 iOS/combined
   fixtures, `test/ios_test.dart`. Schema: eight new `code` values only. Validated on one Xcode 26.6 / iOS 26.5 simulator sample (see below); not on real IPAs or devices.
 - Android-only projects produce the same report as before; the `--help` options `--help`/`--version` now have descriptions.
 - `docs/ios-validation.md`: record of one Codemagic macOS 26.5.1 / Xcode 26.6 / iOS 26.5 simulator run of a Flutter + WidgetKit sample (build, install, launch, extension registered, widget shown on the home screen, `doctor` clean on the sample and reporting WF5001-WF5008 for faults introduced one at a time). Not run: widget gallery capture, App Group runtime sharing, real IPA / `verify` WF7001-WF7004, Release builds, devices. Rule IDs, schema and exit codes unchanged.
-- The planned release, `repository` and Schema `$id` metadata are unchanged but the release itself is on hold.
+- `repository` and Schema `$id` metadata are unchanged; `publish_to: none` remains.
