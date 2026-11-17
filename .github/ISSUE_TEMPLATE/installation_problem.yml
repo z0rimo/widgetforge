@@ -1,0 +1,49 @@
+name: Installation / CLI problem
+description: Trouble installing or running WidgetForge, or JSON output is polluted
+title: "[Install]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not paste secrets, private keys, tokens, signing material, company or customer code, or personal data. Reduce your project to a minimal synthetic example first.
+        Known issue: on Dart SDK 3.8.0 a launcher created by `dart pub global activate --source path .` can print pub text on stdout before the JSON. See the README ("Running it: what has been verified").
+  - type: dropdown
+    id: method
+    attributes:
+      label: How you run WidgetForge
+      options:
+        - dart run bin/widgetforge.dart (from a checkout)
+        - compiled executable (dart compile exe)
+        - dart pub global activate (path or git)
+        - used by an AI agent / the agent skill
+        - other
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: WidgetForge version
+      description: Output of `widgetforge --version`, or the release tag / commit.
+    validations:
+      required: true
+  - type: input
+    id: dart
+    attributes:
+      label: Dart SDK version and OS
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Commands you ran
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Output and exit code
+      description: stdout, stderr and the exit code (trim anything private).
+      render: text
+    validations:
+      required: true

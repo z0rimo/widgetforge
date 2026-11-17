@@ -1,0 +1,46 @@
+name: Rule request
+description: Propose a new diagnostic rule
+title: "[Rule]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not paste secrets, private keys, tokens, signing material, company or customer code, or personal data. Reduce your project to a minimal synthetic example first.
+        A rule needs a reproducible failure, documented or observed evidence, and a fixture. New rule IDs are assigned by the maintainer.
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Android
+        - iOS
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem to detect
+      description: What goes wrong at build, install or run time, and the exact error text if there is one.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Links to official documentation or a description of how you reproduced it (tool versions included).
+    validations:
+      required: true
+  - type: textarea
+    id: detect
+    attributes:
+      label: How it could be detected statically
+      description: Which files or settings show it, and what should not be reported (false-positive boundary).
+    validations:
+      required: true
+  - type: textarea
+    id: fixture
+    attributes:
+      label: Example fixture
+      description: A minimal synthetic project that shows the problem, and a fixed version.
+      render: text

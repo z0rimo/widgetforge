@@ -1,0 +1,51 @@
+name: Bug report
+description: WidgetForge crashes, hangs, exits with the wrong code, or prints invalid JSON
+title: "[Bug]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not paste secrets, private keys, tokens, signing material, company or customer code, or personal data. Reduce your project to a minimal synthetic example first.
+        For wrong or missing diagnostics use the "False positive / false negative" form. For installation problems use the "Installation / CLI problem" form.
+  - type: input
+    id: version
+    attributes:
+      label: WidgetForge version
+      description: Output of `widgetforge --version`, or the release tag / commit.
+    validations:
+      required: true
+  - type: input
+    id: dart
+    attributes:
+      label: Dart SDK version and OS
+      description: Output of `dart --version` and your operating system.
+    validations:
+      required: true
+  - type: input
+    id: command
+    attributes:
+      label: Command that was run
+      placeholder: widgetforge doctor --json <path>
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: Exit code, stdout and stderr (trim anything private).
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Minimal reproduction
+      description: Steps, or a minimal synthetic project / archive. Describe where to get it if it is too large to paste.
+    validations:
+      required: true

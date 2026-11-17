@@ -1,0 +1,78 @@
+name: False positive / false negative
+description: A diagnostic that is wrong, or a problem WidgetForge should have reported but did not
+title: "[Accuracy]: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not paste secrets, private keys, tokens, signing material, company or customer code, or personal data. Reduce your project to a minimal synthetic example first.
+        A clean report only means the implemented checks found nothing. Please check the rule's page under `docs/errors/` for its documented scope first.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      options:
+        - False positive (reported, but the setup is fine)
+        - False negative (a real problem was not reported)
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Android
+        - iOS
+        - Both
+    validations:
+      required: true
+  - type: input
+    id: code
+    attributes:
+      label: WF diagnostic code
+      description: The code that was reported, or the one you expected (for example WF2003).
+      placeholder: WF2003
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: WidgetForge version
+      description: Output of `widgetforge --version`, or the release tag / commit.
+    validations:
+      required: true
+  - type: input
+    id: dart
+    attributes:
+      label: Dart SDK version and OS
+    validations:
+      required: true
+  - type: textarea
+    id: fixture
+    attributes:
+      label: Minimal reproduction fixture
+      description: The smallest synthetic project (file tree plus the relevant file contents) that shows the problem. Do not paste real app code.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+      description: What you expected, and the documentation or real-build evidence that supports it.
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual result
+    validations:
+      required: true
+  - type: textarea
+    id: json
+    attributes:
+      label: JSON output
+      description: Output of `widgetforge doctor --json <path>` (or `verify --json`), with private paths removed.
+      render: json
+    validations:
+      required: true
