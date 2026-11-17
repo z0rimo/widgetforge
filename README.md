@@ -177,9 +177,14 @@ explanation and a concrete `fix`. Details: [diagnostic contract](docs/diagnostic
 [`skills/widgetforge/SKILL.md`](skills/widgetforge/SKILL.md) is an agent skill that describes when to use WidgetForge (widget setup problems only, not general Flutter UI work), how to run it, how to parse the JSON and exit codes, and that source edits need the user's approval. Install it by copying the folder `skills/widgetforge/` into the skills directory your agent reads:
 
 - **Claude Code:** `~/.claude/skills/widgetforge/` (personal) or `.claude/skills/widgetforge/` in a project.
-- **Codex and other agents:** use the location your agent documents for skill or instruction files, or paste the contents of `SKILL.md` into its instructions (your agent's project instruction file). The skill file format was written for Claude Code; its use in other agents has not been tested here.
+- **Codex and other agents:** use the location your agent documents for skill or instruction files, or paste the contents of `SKILL.md` into its instructions (your agent's project instruction file). In one test, Codex CLI 0.167.1 read `.agents/skills/widgetforge/SKILL.md` from the project.
 
-The skill still needs WidgetForge itself on the machine (a checkout, or the compiled executable). Whether agents pick the skill automatically has not been measured.
+Installing the skill does not install WidgetForge itself. The skill first checks whether a `widgetforge` command is on `PATH`; if it is not, it uses an executable or checkout path that you give the agent. Putting the compiled executable (`dart compile exe`, see Quick start) on `PATH` is the most reliable setup, and in read-only environments the compiled executable is preferred, because `dart run` can fail there when Dart tries to write its own telemetry file.
+
+What was tested (small samples on synthetic fixtures, one run per case, so these are observations and not rates):
+- **Claude Code 2.1.326** (`claude-sonnet-5-5`): on three prompts about a widget problem that did not name the tool, the skill was called by the agent itself in 3 of 3, and in 0 of 2 prompts about unrelated problems (a Flutter overflow, a React error). With the current instructions the CLI ran in 3 of 3 cases and reported the expected `WF2001`, `WF2003` and `WF5001`; with the earlier instructions it ran in 0 of 6 runs (two rounds of three).
+- **Codex CLI 0.167.1:** with the earlier instructions, the agent read the skill file and ran the CLI in 3 of 3 widget prompts, with the expected codes. How Codex discovers skills automatically was not determined, and the current instructions were not tested with Codex.
+- Automatic selection is not guaranteed in other agents, versions or projects; invoke the skill explicitly if it is not picked up.
 
 ## Verifying a built APK / IPA (`verify`)
 
