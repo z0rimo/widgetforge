@@ -19,7 +19,7 @@ iOS-only and combined Flutter projects are supported; a platform whose project f
 It does not replace [`home_widget`](https://pub.dev/packages/home_widget). It does not depend on any
 widget package and also works for hand-written native widgets. It never modifies the project it inspects.
 
-> **Status: v0.1.0, not yet published.** The GitHub repository `https://github.com/z0rimo/widgetforge` is currently **private**: no public release or pub.dev package exists, and the GitHub links here work only for accounts with access. Android checks are the most verified; iOS rules were exercised on one Xcode 26.6 / iOS 26.5 simulator sample ([docs/ios-validation.md](docs/ios-validation.md)); IPA verification is Experimental. Licensed under the [MIT License](LICENSE).
+> **Status: v0.1.0, not yet published.** No public release or pub.dev package exists. <!-- PRIVATE-ONLY:start -->The GitHub repository `https://github.com/z0rimo/widgetforge` is currently **private**, so the GitHub links here work only for accounts with access.<!-- PRIVATE-ONLY:end --> Android checks are the most verified; iOS rules were exercised on one Xcode 26.6 / iOS 26.5 simulator sample ([docs/ios-validation.md](docs/ios-validation.md)); IPA verification is Experimental. Licensed under the [MIT License](LICENSE).
 
 ## At a glance
 
@@ -33,8 +33,8 @@ widget package and also works for hand-written native widgets. It never modifies
 ## Quick start
 
 Requires a Dart SDK that satisfies `environment.sdk` in `pubspec.yaml` (`^3.5.0`, i.e. Dart 3.5 or newer and below 4.0).
-**Tested only with Dart 3.8.0 (Flutter 3.32.0) on Linux**; the declared lower bound (3.5) has not been tested.
-From a checkout of this repository (`git clone https://github.com/z0rimo/widgetforge.git`; requires access while the repository is private):
+**Main verification: Dart 3.8.0 (Flutter 3.32.0) on Linux.** On Dart 3.5.4 (Linux) `dart analyze` was clean and all 302 tests passed once; Dart 3.5.0 itself and other platforms were not tested.
+From a checkout of this repository (`git clone https://github.com/z0rimo/widgetforge.git`<!-- PRIVATE-ONLY:start -->; requires access while the repository is private<!-- PRIVATE-ONLY:end -->). A fresh clone of the repository was checked with Dart 3.8.0 (`dart pub get`, `dart analyze`, `dart test`, the commands below):
 
 ```sh
 dart pub get
@@ -58,7 +58,7 @@ The first two rows were verified to meet that in every run tested (Dart SDK 3.8.
 |-----|--------|
 | `dart run bin/widgetforge.dart ...` | **Verified.** The supported development path. |
 | Native executable (JSON automation) | **Verified.** Build once, then call the binary directly: `dart pub get && mkdir -p build && dart compile exe bin/widgetforge.dart -o build/widgetforge`, then `build/widgetforge doctor --json <path>`. Same stdout and exit codes as `dart run`. |
-| `dart pub global activate --source git https://github.com/z0rimo/widgetforge.git` | **Not verified against the GitHub repository (private, not yet tested).** The same mechanism was verified only against a throw-away local git repository (clean JSON, 3 consecutive runs, Dart 3.8.0). After publication, re-run it against the real URL and check that stdout is one JSON document before relying on it. |
+| `dart pub global activate --source git https://github.com/z0rimo/widgetforge.git` | **Not verified against the GitHub repository** (<!-- PRIVATE-ONLY:start -->private, <!-- PRIVATE-ONLY:end -->not yet tested). The same mechanism was verified only against a throw-away local git repository (clean JSON, 3 consecutive runs, Dart 3.8.0). After publication, re-run it against the real URL and check that stdout is one JSON document before relying on it. |
 | `dart pub global activate --source path .` | **Not recommended for `--json`.** On Dart SDK 3.8.0 the generated launcher can print pub's `Resolving dependencies...` output to stdout in front of the JSON (see below). |
 | pub.dev (`dart pub global activate widgetforge`) | **Not verified.** The package is not published; no behaviour is guaranteed. |
 
@@ -88,7 +88,7 @@ If you do use a launcher, check that stdout parses as one JSON document before t
 
 WidgetForge v0.1.0 is a static diagnostic tool for Android and iOS projects. Read the JSON in this order:
 
-- `diagnostics[]` are the findings, each with a `file`, `line`, `evidence` and `fix`. Almost all are `error` (counted in `summary.errors`, exit code 1); WF7002 and WF7004 (IPA, unverified) are `warning` and leave the exit code at 0, so read `diagnostics[]` even when the exit is 0.
+- `diagnostics[]` are the findings, each with a `file`, a `line` (can be `null` when no single line applies), `evidence` and `fix`. Almost all are `error` (counted in `summary.errors`, exit code 1); WF7002 and WF7004 (IPA, unverified) are `warning` and leave the exit code at 0, so read `diagnostics[]` even when the exit is 0.
 - `notes[]` are plain strings that are **not** diagnostics: they change neither `summary` nor the exit code. They record
   what could not be checked or what depends on the build variant, for example: layout checks skipped because no widget
   receiver was found; a receiver declared only in a non-main source set (debug, release, a flavor) or removed with
@@ -98,6 +98,8 @@ WidgetForge v0.1.0 is a static diagnostic tool for Android and iOS projects. Rea
   this version found nothing in their current scope. Read `notes[]` too, and remember the [limitations](#limitations).
 - It is not a guarantee that the widget renders correctly on a device. Nothing was verified on an emulator or device, and
   a successful build does not prove that a widget layout inflates.
+
+**`doctor` vs `verify`:** `doctor` reads a project's *source* (Android manifest, layouts, provider XML, Xcode project, plists) before you build; `verify` reads a *built* `.apk` or `.ipa` and checks what actually ended up inside it.
 
 ## Example output
 
@@ -167,7 +169,7 @@ A project with a finding (`doctor --json fixtures/err_receiver_missing_exported`
 | [WF7003](docs/errors/WF7003.md) | `verify` IPA: widget extension executable missing |
 | [WF7004](docs/errors/WF7004.md) | `verify` IPA (warning, unverified): widget extension MinimumOSVersion below 14 |
 
-Every diagnostic carries a stable `code`, the `file` and `line`, the literal `evidence`, an
+Every diagnostic carries a stable `code`, the `file` and `line` (`null` if no single line applies), the literal `evidence`, an
 explanation and a concrete `fix`. Details: [diagnostic contract](docs/diagnostic-contract.md) and
 [JSON Schema](schema/diagnostic-report.schema.json). Agent usage procedure: [SKILL.md](skills/widgetforge/SKILL.md).
 

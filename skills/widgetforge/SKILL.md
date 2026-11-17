@@ -27,7 +27,7 @@ mkdir -p build && dart compile exe bin/widgetforge.dart -o build/widgetforge   #
 build/widgetforge doctor --json <flutter_project_root>
 ```
 
-Both were verified to print only the JSON document on stdout (Dart SDK 3.8.0, Linux).
+Both were verified to print only the JSON document on stdout (Dart SDK 3.8.0, Linux). `dart pub get` must have been run once in the checkout; running `dart run <checkout>/bin/widgetforge.dart ...` with an absolute path from another working directory was checked and works (Dart 3.8.0), and the project path argument can be absolute.
 If no checkout is available, say so and fall back to the manual checks in `docs/errors/` - never invent diagnostics.
 
 Avoid a launcher created by `dart pub global activate --source path .` for `--json`: on Dart SDK 3.8.0 it can print
@@ -35,6 +35,12 @@ pub's `Resolving dependencies...` text on stdout before the JSON (an SDK/pub beh
 versions untested). Installing from a git URL was verified only against a local scratch repository, and
 pub.dev installation is unverified. Whatever you use, confirm stdout parses as a single JSON document; if it does
 not, switch to `dart run` or the compiled executable instead of trimming the output.
+
+## Installing this skill (user decision; the skill does not install itself)
+
+- Claude Code: copy this folder to `.claude/skills/widgetforge/` in the project (or `~/.claude/skills/widgetforge/` for all projects).
+- Codex: skill/instruction locations depend on the Codex version and were not verified here; check its documentation, or reference this `SKILL.md` from the project's agent instruction file.
+- Whether an agent selects this skill automatically has not been measured; invoke it explicitly if needed.
 
 ## 2. Run (read-only, never edits the project)
 
