@@ -11,41 +11,27 @@ embedding, extension Info.plist, bundle identifier, entitlements / App Groups, `
 Typical triggers: a Flutter home widget not showing, an `AppWidgetProvider` not registered, a missing WidgetKit extension, an iOS widget configuration error, inspecting a built APK's widget metadata.
 Do **not** use for: ordinary Flutter widget-tree layout issues, Live Activities / App Intents, or runtime/device-only behaviour.
 
-## 1. Find the tool
+## 1. Find and run the tool (in this order, one simple command per step)
 
-Do not assume WidgetForge is installed or published (v0.1.0 is not on pub.dev; its source is at `https://github.com/z0rimo/widgetforge`; ask the user where their WidgetForge checkout is). Use a checkout:
+Do not search the file system for it. Never run `find /`, glob your home directory, or look in backups, other projects or old copies. Do not guess paths. Run only an executable that `command -v` resolved from PATH or that the user named; never run a binary you found by searching or one that lives inside the project being inspected. Use one simple command per step (no `;`, `&&`, pipes or redirects): a compound command can be refused by the permission policy, and if any command is refused you must not rephrase it into another form to get around the refusal.
 
-```sh
-dart pub get                                  # inside the WidgetForge checkout
-dart run <widgetforge-checkout>/bin/widgetforge.dart --version
-```
+1. **PATH.** Run `command -v widgetforge`. If it prints a path, run it directly on the project root: `widgetforge doctor --json <flutter_project_root>`. Read the exit code from the tool result.
+2. **A path the user gave you** (a compiled executable or a checkout). Prefer a compiled executable: `<path>/widgetforge doctor --json <flutter_project_root>`. A compiled executable needs no Dart SDK and writes nothing outside the project.
+3. **A checkout the user gave you, no executable.** `dart run <checkout>/bin/widgetforge.dart doctor --json <flutter_project_root>` (run `dart pub get` in the checkout once). In a read-only sandbox `dart run` can fail before WidgetForge starts, for example `Failed to set file modification time ... Read-only file system` for Dart's own telemetry file. That is a Dart environment limit, not a WidgetForge result: do not try to work around it, report it, and use a compiled executable if the user can provide one.
+4. **None of the above.** Say that no WidgetForge executable or checkout was available (and which step failed), and ask the user for a path. "The command was refused by the permission policy" and "WidgetForge is not installed" are different findings: report which one happened. Do not invent diagnostics; you may still inspect the project's files by hand as a clearly labelled manual check, with no WidgetForge result.
 
-For repeated automated use, build a native executable once and call it directly:
-
-```sh
-mkdir -p build && dart compile exe bin/widgetforge.dart -o build/widgetforge   # inside the checkout
-build/widgetforge doctor --json <flutter_project_root>
-```
-
-Both were verified to print only the JSON document on stdout (Dart SDK 3.8.0, Linux). `dart pub get` must have been run once in the checkout; running `dart run <checkout>/bin/widgetforge.dart ...` with an absolute path from another working directory was checked and works (Dart 3.8.0), and the project path argument can be absolute.
-If no checkout is available, say so and fall back to the manual checks in `docs/errors/` - never invent diagnostics.
-
-Avoid a launcher created by `dart pub global activate --source path .` for `--json`: on Dart SDK 3.8.0 it can print
-pub's `Resolving dependencies...` text on stdout before the JSON (an SDK/pub behaviour, not WidgetForge; other SDK
-versions untested). Installing from a git URL was verified only against a local scratch repository, and
-pub.dev installation is unverified. Whatever you use, confirm stdout parses as a single JSON document; if it does
-not, switch to `dart run` or the compiled executable instead of trimming the output.
+Both the compiled executable and `dart run` were verified to print only the JSON document on stdout (Dart SDK 3.8.0, Linux). Avoid a launcher created by `dart pub global activate --source path .` for `--json`: on Dart SDK 3.8.0 it can print pub's `Resolving dependencies...` text on stdout before the JSON (an SDK/pub behaviour, not WidgetForge; other SDK versions untested). Installing from a git URL was verified only against a local scratch repository, and pub.dev installation is unverified. Whatever you use, confirm stdout parses as a single JSON document; if it does not, say so instead of trimming the output.
 
 ## Installing this skill (user decision; the skill does not install itself)
 
 - Claude Code: copy this folder to `.claude/skills/widgetforge/` in the project (or `~/.claude/skills/widgetforge/` for all projects).
-- Codex: skill/instruction locations depend on the Codex version and were not verified here; check its documentation, or reference this `SKILL.md` from the project's agent instruction file.
-- Whether an agent selects this skill automatically has not been measured; invoke it explicitly if needed.
+- Codex: in one test with Codex CLI 0.167.1 the agent read `.agents/skills/widgetforge/SKILL.md` from the project; how Codex discovers skills automatically was not determined, and the updated instructions were not tested with Codex. Check its documentation, or reference this `SKILL.md` from the project's agent instruction file.
+- Automatic selection is not guaranteed. In a small test with Claude Code 2.1.326 (one run per case) the skill was called without being named in 3 of 3 widget-problem prompts and in 0 of 2 unrelated prompts, and the instructions in section 1 then ran the CLI in 3 of 3 cases (the earlier wording: 0 of 3). Other agents and versions were not measured; invoke the skill explicitly if it is not picked up.
 
 ## 2. Run (read-only, never edits the project)
 
 ```sh
-dart run <widgetforge-checkout>/bin/widgetforge.dart doctor --json <flutter_project_root>
+widgetforge doctor --json <flutter_project_root>
 ```
 
 Commands: `doctor` (source) and `verify <file.apk|file.ipa>` (built artifact, see `docs/verify-contract.md`); flags `--json`, `--help`, `--version`. There is no `--platform`.
