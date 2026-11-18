@@ -4,10 +4,10 @@
 
 | Version | Supported |
 |---|---|
-| Latest published release | yes |
+| Latest published release (see [Releases](https://github.com/z0rimo/widgettriage/releases/latest)) | yes |
 | Any older release | no; upgrade to the latest release |
 
-The latest published release is currently v0.1.0 (published as WidgetForge). v0.2.0 (WidgetTriage) is the next planned release and becomes the supported one once it is published.
+Security fixes are made against the latest published release only. The first release published under the name WidgetTriage is v0.2.0; v0.1.0 was published as WidgetForge, remains available as a historical release and is not updated.
 
 ## Reporting a vulnerability
 
