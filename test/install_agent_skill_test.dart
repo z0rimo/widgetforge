@@ -265,6 +265,33 @@ void main() {
             ? 'creating symlinks needs privileges on Windows'
             : false);
 
+    test('a planted predictable temp-name symlink is never written through',
+        () {
+      final outside = File(p.join(tmp.path, 'outside.txt'))
+        ..writeAsStringSync('precious');
+      final dir =
+          Directory(p.join(project.path, '.agents', 'skills', 'widgettriage'))
+            ..createSync(recursive: true);
+      for (final name in ['SKILL.md.tmp-$pid', 'SKILL.md.tmp', '0']) {
+        Link(p.join(dir.path, name)).createSync(outside.path);
+      }
+      final r = run(['--agent', 'codex']);
+      expect(r.code, 0, reason: r.out + r.err);
+      expect(outside.readAsStringSync(), 'precious');
+      final skill = p.join(dir.path, 'SKILL.md');
+      expect(FileSystemEntity.typeSync(skill, followLinks: false),
+          FileSystemEntityType.file);
+      expect(File(skill).readAsStringSync(), original());
+      expect(
+          dir
+              .listSync()
+              .where((e) => p.basename(e.path).startsWith('.wt-install-')),
+          isEmpty);
+    },
+        skip: Platform.isWindows
+            ? 'creating symlinks needs privileges on Windows'
+            : false);
+
     test('a symlink inside the skill source is refused', () {
       Link(p.join(source.path, 'link.md'))
           .createSync(p.join(source.path, 'SKILL.md'));

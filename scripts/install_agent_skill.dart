@@ -299,7 +299,7 @@ _Result _installOne(
   }
 
   final createdDirs = <Directory>[];
-  final tempFiles = <File>[];
+  Directory? stage;
   try {
     // Create missing directories, remembering which ones are new (for cleanup).
     final toCreate = <Directory>[];
@@ -312,14 +312,18 @@ _Result _installOne(
       dir.createSync();
       createdDirs.add(dir);
     }
+    // Files are written into a private staging directory that this run creates exclusively
+    // (a fresh, unpredictable name), then renamed into place. A rename replaces a symbolic link
+    // at the destination instead of following it, so a planted link can never redirect a write.
+    stage = Directory(target).createTempSync('.wt-install-');
     final backups = <String>[];
+    var n = 0;
     for (final entry in files.entries) {
       final dest = File(p.join(target, entry.key));
       final isDiff = differing.contains(entry.key);
       if (dest.existsSync() && !isDiff) continue;
       dest.parent.createSync(recursive: true);
-      final tmp = File('${dest.path}.tmp-$pid');
-      tempFiles.add(tmp);
+      final tmp = File(p.join(stage.path, '${n++}'));
       tmp.writeAsBytesSync(entry.value, flush: true);
       if (isDiff) {
         final bak = File('${dest.path}.bak');
@@ -332,11 +336,14 @@ _Result _installOne(
     // Verify what is on disk now.
     for (final entry in files.entries) {
       final f = File(p.join(target, entry.key));
-      if (!f.existsSync() || !_same(f.readAsBytesSync(), entry.value)) {
+      if (FileSystemEntity.typeSync(f.path, followLinks: false) !=
+              FileSystemEntityType.file ||
+          !_same(f.readAsBytesSync(), entry.value)) {
         throw FileSystemException(
             'installed file does not match the source', f.path);
       }
     }
+    stage.deleteSync(recursive: true);
     return _Result(
         agent,
         display,
@@ -346,9 +353,7 @@ _Result _installOne(
             : 'replaced ${backups.join(', ')}; the previous copy is kept as <name>.bak');
   } on FileSystemException {
     // Best-effort cleanup of what this run created; pre-existing user files are never deleted.
-    for (final t in tempFiles) {
-      if (t.existsSync()) t.deleteSync();
-    }
+    if (stage != null && stage.existsSync()) stage.deleteSync(recursive: true);
     for (final dir in createdDirs.reversed) {
       if (dir.existsSync() && dir.listSync().isEmpty) dir.deleteSync();
     }
