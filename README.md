@@ -60,7 +60,7 @@ The first two rows were verified to meet that in every run tested (Dart SDK 3.8.
 |-----|--------|
 | `dart run bin/widgettriage.dart ...` | **Verified.** The supported development path. |
 | Native executable (JSON automation) | **Verified.** Build once, then call the binary directly: `dart pub get && mkdir -p build && dart compile exe bin/widgettriage.dart -o build/widgettriage`, then `build/widgettriage doctor --json <path>`. Same stdout and exit codes as `dart run`. |
-| `dart pub global activate --source git https://github.com/z0rimo/widgettriage.git` | **Not verified against the GitHub repository** (not yet tested). The same mechanism was verified only against a throw-away local git repository (clean JSON, 3 consecutive runs, Dart 3.8.0). Run it against the GitHub URL and check that stdout is one JSON document before relying on it. |
+| `dart pub global activate --source git https://github.com/z0rimo/widgettriage.git` | **Verified once against the GitHub repository** on Linux with Dart 3.8.0 (installed from `main` at `93d9fa8` into a temporary pub cache: `widgettriage --version` printed `widgettriage 0.2.0` and `doctor --json` wrote a single JSON document to stdout). Not verified on macOS or Windows or with other SDK versions; check that stdout is one JSON document before relying on it. |
 | `dart pub global activate --source path .` | **Not recommended for `--json`.** On Dart SDK 3.8.0 the generated launcher can print pub's `Resolving dependencies...` output to stdout in front of the JSON (see below). |
 | pub.dev (`dart pub global activate widgettriage`) | **Not verified.** The package is not published; no behaviour is guaranteed. |
 
