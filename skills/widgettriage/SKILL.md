@@ -24,8 +24,10 @@ Both the compiled executable and `dart run` were verified to print only the JSON
 
 ## Installing this skill (user decision; the skill does not install itself)
 
-- Claude Code: copy this folder to `.claude/skills/widgettriage/` in the project (or `~/.claude/skills/widgettriage/` for all projects).
-- Codex: in one test with Codex CLI 0.167.1 the agent read `.agents/skills/widgettriage/SKILL.md` from the project; how Codex discovers skills automatically was not determined, and the updated instructions were not tested with Codex. Check its documentation, or reference this `SKILL.md` from the project's agent instruction file.
+- Claude Code: copy this folder to `.claude/skills/widgettriage/` in the project (this project only) or `~/.claude/skills/widgettriage/` (all your projects).
+- Codex: copy it to `.agents/skills/widgettriage/` in the project (Codex scans `.agents/skills` from the working directory up to the repository root) or `~/.agents/skills/widgettriage/` (all your projects). These are the locations in the Codex documentation. In one test with Codex CLI 0.167.1 the agent read the project copy; the updated instructions were not tested with Codex.
+- Being in one of these locations makes the skill discoverable; whether the model chooses it for a prompt was not verified for Codex and is not guaranteed in either tool.
+- Same name in several places: prefer one scope. Claude Code uses the enterprise skill over the personal one and the personal one over the project one; Codex does not merge same-named skills (both can appear in its selectors). Check which copy is loaded if you installed it more than once.
 - Automatic selection is not guaranteed. In a small test with Claude Code 2.1.326 (one run per case) the skill was called without being named in 3 of 3 widget-problem prompts and in 0 of 2 unrelated prompts, and the instructions in section 1 then ran the CLI in 3 of 3 cases (the earlier wording: 0 of 3). Other agents and versions were not measured; invoke the skill explicitly if it is not picked up.
 
 ## 2. Run (read-only, never edits the project)
