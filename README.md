@@ -64,7 +64,7 @@ The first two rows were verified to meet that in every run tested (Dart SDK 3.8.
 | `dart pub global activate --source path .` | **Not recommended for `--json`.** On Dart SDK 3.8.0 the generated launcher can print pub's `Resolving dependencies...` output to stdout in front of the JSON (see below). |
 | pub.dev (`dart pub global activate widgettriage`) | **Not verified.** The package is not published; no behaviour is guaranteed. |
 
-Checked (as WidgetForge v0.1.0) from a fresh clone of the GitHub repository (Dart 3.8.0): `dart pub get`, `dart analyze`, `dart test`, `dart run bin/widgettriage.dart doctor --json <project>`. Not checked from a fresh clone: the compiled executable (checked from the same source tree) and the git-source activation above.
+Checked (as WidgetForge v0.1.0, entry point `bin/widgetforge.dart`) from a fresh clone of the GitHub repository (Dart 3.8.0): `dart pub get`, `dart analyze`, `dart test`, `dart run bin/widgetforge.dart doctor --json <project>`. The renamed entry point `bin/widgettriage.dart` was re-run locally for v0.2.0 (not from a fresh clone). Not checked from a fresh clone: the compiled executable (checked from the same source tree) and the git-source activation above.
 
 #### Known issue: path-activated launcher on Dart SDK 3.8.0
 
