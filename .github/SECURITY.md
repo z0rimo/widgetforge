@@ -4,8 +4,10 @@
 
 | Version | Supported |
 |---|---|
-| v0.2.0 | yes |
-| v0.1.0 (published as WidgetForge) | no further updates; upgrade to v0.2.0 |
+| Latest published release | yes |
+| Any older release | no; upgrade to the latest release |
+
+The latest published release is currently v0.1.0 (published as WidgetForge). v0.2.0 (WidgetTriage) is the next planned release and becomes the supported one once it is published.
 
 ## Reporting a vulnerability
 
