@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Agent Skill: the `description` in `skills/widgettriage/SKILL.md` was rewritten (shorter, states when to use it and what it does not do). Earlier skill-selection observations were made with the previous wording. `name` is unchanged.
+- New `scripts/install_agent_skill.dart` installs the skill for Codex and/or Claude Code (project or user scope, `--dry-run`, `--force`); tests in `test/install_agent_skill_test.dart`. No change to the CLI, the 29 rules, the JSON report or exit codes.
+
 ## 0.2.0
 
 Rebrand release: WidgetForge is now **WidgetTriage**. No diagnostic logic changed.
