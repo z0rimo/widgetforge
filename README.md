@@ -176,7 +176,7 @@ explanation and a concrete `fix`. Details: [diagnostic contract](docs/diagnostic
 
 ## AI agent integration
 
-[`skills/widgettriage/SKILL.md`](skills/widgettriage/SKILL.md) is an agent skill that describes when to use WidgetTriage (widget setup problems only, not general Flutter UI work), how to run it, how to parse the JSON and exit codes, and that source edits need the user's approval. Install it by copying the folder `skills/widgettriage/` into the skills directory your agent reads:
+[`skills/widgettriage/SKILL.md`](skills/widgettriage/SKILL.md) is an agent skill that describes when to use WidgetTriage (widget setup problems only, not general Flutter UI work), how to run it, how to parse the JSON and exit codes, and that source edits need the user's approval. Install it with the installer script below, or by copying the folder `skills/widgettriage/` into the skills directory your agent reads:
 
 | Agent | Project (this project only) | User (all your projects) |
 |---|---|---|
@@ -185,13 +185,28 @@ explanation and a concrete `fix`. Details: [diagnostic contract](docs/diagnostic
 
 These are the locations given in each tool's own documentation (read in November 2026); the two tools use different directories, so install the folder in each one you use. Other agents: use the location your agent documents for skill or instruction files, or paste the contents of `SKILL.md` into its instructions.
 
+#### Installer script
+
+The CLI and the skill are two separate installs: the skill is a set of instructions for your agent, and it calls the `widgettriage` CLI, which must be available as well (see Quick start). From a checkout of this repository:
+
+```sh
+# preview, nothing is written
+dart run scripts/install_agent_skill.dart --agent both --scope project --project /path/to/flutter_project --dry-run
+# project scope: only that project
+dart run scripts/install_agent_skill.dart --agent both --scope project --project /path/to/flutter_project
+# user scope: all your projects (~/.agents/skills and ~/.claude/skills)
+dart run scripts/install_agent_skill.dart --agent both --scope user
+```
+
+`--agent` is `codex`, `claude` or `both` (default `both`); `--scope` is `project` (default) or `user`. It copies files from the checkout (no download, nothing runs on `dart pub get`), reports each agent separately (`INSTALLED`, `ALREADY INSTALLED`, `CONFLICT`, `FAILED`) and exits 1 if any target conflicted or failed. An existing different copy is never overwritten unless you pass `--force`, which replaces only that file inside the `widgettriage` skill directory and keeps the old one as `SKILL.md.bak`; symbolic links at the target are never followed or replaced. Check the result by looking at the printed paths, then start a new agent session. Tested on Linux only (macOS and Windows: not run).
+
 Listing and selecting are different things: a skill in one of these locations is *discoverable* (both tools read its name and description), but whether the model then *chooses* it for a given prompt is the model's decision and is not guaranteed (see "What was tested").
 
 Name collisions: install it in one scope unless you need both. If the same name `widgettriage` exists in several places, Claude Code runs the enterprise skill over the personal one and the personal one over the project one, and Codex does not merge same-named skills (both can appear in its selectors). The documentation of neither tool describes a warning for a duplicate, so check which copy is being loaded if you installed more than once. Both tools document automatic change detection (Claude Code: run `/reload-skills` if the skills directory is new; Codex: restart if an update does not appear).
 
 Installing the skill does not install WidgetTriage itself. The skill first checks whether a `widgettriage` command is on `PATH`; if it is not, it uses an executable or checkout path that you give the agent. Putting the compiled executable (`dart compile exe`, see Quick start) on `PATH` is the most reliable setup, and in read-only environments the compiled executable is preferred, because `dart run` can fail there when Dart tries to write its own telemetry file.
 
-What was tested (small samples on synthetic fixtures, one run per case, so these are observations and not rates):
+What was tested (small samples on synthetic fixtures, one run per case, so these are observations and not rates; made with an earlier version of the skill's description, so they do not measure the current description):
 - **Claude Code 2.1.326** (`claude-sonnet-5-5`): on three prompts about a widget problem that did not name the tool, the skill was called by the agent itself in 3 of 3, and in 0 of 2 prompts about unrelated problems (a Flutter overflow, a React error). With the current instructions the CLI ran in 3 of 3 cases and reported the expected `WF2001`, `WF2003` and `WF5001`; with the earlier instructions it ran in 0 of 6 runs (two rounds of three).
 - **Codex CLI 0.167.1:** with the earlier instructions, the agent read the skill file and ran the CLI in 3 of 3 widget prompts, with the expected codes. Whether Codex lists this skill and selects it on its own was not tested, and the current instructions were not tested with Codex.
 - Automatic selection is not guaranteed in other agents, versions or projects; invoke the skill explicitly if it is not picked up.

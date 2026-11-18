@@ -1,6 +1,6 @@
 ---
 name: widgettriage
-description: Statically diagnose Flutter home screen widget configuration problems on Android (AppWidget, RemoteViews, manifest, Dart entrypoints) and iOS (WidgetKit extension target, Info.plist, App Groups, entitlements, bundle identifier) with the WidgetTriage CLI - commonly reported symptoms such as "Problem loading widget", widget missing from launcher picker, RemoteViews InflateException / class not allowed to be inflated (not reproduced by the tool itself), AppWidgetProvider manifest errors, android:exported merger error on a widget receiver, blank secondary FlutterActivity or Dart entrypoint not found, iOS widget extension not embedded, App Group or bundle identifier mismatch. Also for inspecting the widget metadata inside a built APK (`verify`). Not for general Flutter UI development. Static analysis, read-only; iOS rules were checked on one Xcode/simulator sample only, not on real IPAs or devices.
+description: Read-only static diagnostics for Flutter home screen widget setup, run through the WidgetTriage CLI with JSON output. Use when a Flutter Android home screen widget (AppWidget) does not show up or fails to load, or after changing widget configuration. It checks AndroidManifest receivers and android:exported, appwidget-provider XML, RemoteViews layouts and secondary FlutterActivity Dart entrypoints, and for iOS the WidgetKit extension target, Info.plist, App Groups, entitlements and bundle identifier. Also verifies the widget metadata inside a built APK. iOS checks and IPA verification are experimental. Not for general Flutter UI work, rendering, on-device or runtime testing, Live Activities or automatic fixes.
 ---
 
 # WidgetTriage doctor
@@ -24,11 +24,13 @@ Both the compiled executable and `dart run` were verified to print only the JSON
 
 ## Installing this skill (user decision; the skill does not install itself)
 
+From a WidgetTriage checkout, `dart run scripts/install_agent_skill.dart --agent both --scope project --project <flutter_project>` copies this folder to the paths below (`--dry-run` shows what would happen; it never overwrites a different existing copy without `--force`). It installs the skill only, not the `widgettriage` CLI. Or copy the folder by hand:
+
 - Claude Code: copy this folder to `.claude/skills/widgettriage/` in the project (this project only) or `~/.claude/skills/widgettriage/` (all your projects).
 - Codex: copy it to `.agents/skills/widgettriage/` in the project (Codex scans `.agents/skills` from the working directory up to the repository root) or `~/.agents/skills/widgettriage/` (all your projects). These are the locations in the Codex documentation. In one test with Codex CLI 0.167.1 the agent read the project copy; the updated instructions were not tested with Codex.
 - Being in one of these locations makes the skill discoverable; whether the model chooses it for a prompt was not verified for Codex and is not guaranteed in either tool.
 - Same name in several places: prefer one scope. Claude Code uses the enterprise skill over the personal one and the personal one over the project one; Codex does not merge same-named skills (both can appear in its selectors). Check which copy is loaded if you installed it more than once.
-- Automatic selection is not guaranteed. In a small test with Claude Code 2.1.326 (one run per case) the skill was called without being named in 3 of 3 widget-problem prompts and in 0 of 2 unrelated prompts, and the instructions in section 1 then ran the CLI in 3 of 3 cases (the earlier wording: 0 of 3). Other agents and versions were not measured; invoke the skill explicitly if it is not picked up.
+- Automatic selection is not guaranteed. In a small test with Claude Code 2.1.326 (one run per case, made with an earlier version of this skill's description) the skill was called without being named in 3 of 3 widget-problem prompts and in 0 of 2 unrelated prompts, and the instructions in section 1 then ran the CLI in 3 of 3 cases (the earlier wording: 0 of 3). Other agents and versions were not measured; invoke the skill explicitly if it is not picked up.
 
 ## 2. Run (read-only, never edits the project)
 
