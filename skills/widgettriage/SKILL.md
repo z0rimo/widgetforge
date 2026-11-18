@@ -78,7 +78,7 @@ Do not "fix" a note by inventing a value (a bundle id prefix, a deployment targe
 
 **Zero diagnostics (exit code 0) is not a verification result.** It means only that the implemented static checks found
 nothing in their current scope. It does not mean every configuration was checked, that notes can be ignored, that
-the release build works, or that the widget renders on a device. WidgetTriage v0.2.0 is a static diagnostic tool.
+the release build works, or that the widget renders on a device. WidgetTriage v0.3.0 is a static diagnostic tool.
 
 ## 4. Fix and re-verify
 

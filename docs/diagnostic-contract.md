@@ -1,6 +1,6 @@
 # Diagnostic Report Contract (v1)
 
-This page describes the behaviour **implemented in WidgetTriage 0.2.0 (identical to 0.1.0 apart from the tool name and version)**. The machine-readable source of truth is
+This page describes the behaviour **implemented in WidgetTriage 0.3.0 (the report and the rules are identical to 0.1.0 and 0.2.0 apart from the tool name and version)**. The machine-readable source of truth is
 [`schema/diagnostic-report.schema.json`](../schema/diagnostic-report.schema.json); if this page and the schema
 disagree, the schema and the tests win. Anything not implemented is listed under [Planned](#planned-not-implemented).
 
@@ -64,7 +64,7 @@ Output of `dart run bin/widgettriage.dart doctor --json fixtures/err_entrypoint_
   "schemaVersion": "1",
   "tool": {
     "name": "widgettriage",
-    "version": "0.2.0"
+    "version": "0.3.0"
   },
   "projectPath": "/path/to/flutter_project",
   "summary": {

@@ -1,9 +1,15 @@
 # Changelog
 
-## Unreleased
+## 0.3.0
 
-- Agent Skill: the `description` in `skills/widgettriage/SKILL.md` was rewritten (shorter, states when to use it and what it does not do). Earlier skill-selection observations were made with the previous wording. `name` is unchanged.
-- New `scripts/install_agent_skill.dart` installs the skill for Codex and/or Claude Code (project or user scope, `--dry-run`, `--force`); tests in `test/install_agent_skill_test.dart`. No change to the CLI, the 29 rules, the JSON report or exit codes.
+Adds the Agent Skill installer and tidies the install documentation. No change to the CLI, the 29 rules, the JSON report or the exit codes.
+
+- New `scripts/install_agent_skill.dart`: installs the `widgettriage` skill for Codex (`.agents/skills/`) and/or Claude Code (`.claude/skills/`), in a project or in your home directory, from a local checkout (no download, nothing runs automatically). Options: `--agent codex|claude|both`, `--scope project|user`, `--project`, `--dry-run`, `--force`. It never overwrites a different existing copy without `--force` (the old file is kept as `<name>.bak`), never follows or replaces a symlinked `widgettriage` folder, reports each agent separately, and exits 1 on any conflict or failure. It installs the skill only, not the CLI. Tests: `test/install_agent_skill_test.dart`.
+- Installer portability: `HOME` then `USERPROFILE` (a POSIX-style `HOME` is skipped on Windows), clearer `--project` errors, platform-style path output, and a note when a parent-directory symlink redirects the install.
+- Agent Skill: `description` in `skills/widgettriage/SKILL.md` rewritten (shorter; says when to use it and what it is not for); install paths and name-collision notes for both agents. `name` unchanged. Earlier skill-selection observations were made with the previous wording; automatic model selection of the new wording is not tested.
+- README: five-step Quick start. SECURITY.md: supported-versions wording no longer depends on a version number.
+- JSON report: `tool.version` is `"0.3.0"`; `schemaVersion` stays `"1"`; the schema `$id` points at the `v0.3.0` tag.
+- Verification: Linux (Dart 3.8.0) full test run; installer scenarios also run on Windows 10.0.26100 with Dart 3.8.0 in PowerShell (symlink scenarios skipped there for lack of privileges). macOS: not run. Not published to pub.dev; no binary assets.
 
 ## 0.2.0
 
