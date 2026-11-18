@@ -16,9 +16,16 @@ dart analyze
 dart test
 ```
 
-Both `dart analyze` and `dart test` must pass. Do not delete or skip tests to make them pass.
+This repository has **no automated CI**: nothing runs on a pull request by itself, no green check is available, and the checkboxes in the pull request template are not verified by GitHub. Say only what you actually did; if you cannot confirm a test was run, do not write that it was.
 
-This repository has **no automated CI**: nothing runs on a pull request by itself, and a green check is not available. The maintainer runs `dart analyze` and `dart test` locally before every change. Contributors run them too and report the actual results in the pull request; anything you did not run is written as **NOT RUN**.
+## What to verify
+How much you need to verify depends on the kind of change. Not being able to run the tests is not a reason to hold back a pull request: say **Not tested**. The maintainer re-checks what is needed (`dart analyze`, `dart test`) before merging.
+
+- **Documentation-only** (typos, links, plain wording): `dart analyze` and `dart test` are not required. Check your edit yourself and, if you changed links, that they work. This does not apply if the text changes the meaning of a CLI command, a diagnostic rule or the JSON contract; verify those like a behaviour change.
+- **Bug fix in an existing rule**: running the related tests is recommended, and so is checking the rule's reproducing fixture. Mark anything you did not run as not run.
+- **New rule, CLI behaviour or JSON contract change**: run `dart analyze` and `dart test`, add or check fixtures, keep the rule catalog consistent (`test/catalog_test.dart`) and update the related docs.
+
+Never delete or skip tests to make them pass.
 
 ## Changing behaviour
 - Rule IDs are stable: never renumber or reuse a code, and do not change the meaning of an existing one.
@@ -34,6 +41,7 @@ This repository has **no automated CI**: nothing runs on a pull request by itsel
 6. Run `dart analyze` and `dart test`: `test/catalog_test.dart` checks that the catalog, the code, the docs pages, the README table and the skill agree.
 
 ## Pull requests
-- Keep them small and focused; fill in the template, including the verification you actually performed.
+- `main` accepts changes only through pull requests, including the maintainer's own. No approving review or CI check is required to merge. Contribute from a fork.
+- Keep them small and focused; fill in the short template and state the verification you actually performed.
 - Commit messages: describe the change itself. Do not add tool or co-author trailers on anyone's behalf.
 - By contributing you agree that your contribution is licensed under the repository's [MIT License](LICENSE).
