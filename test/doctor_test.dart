@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
-import 'package:widgetforge/widgetforge.dart';
+import 'package:widgettriage/widgettriage.dart';
 
 Report doctor(String fixture) {
   final loaded = loadProjects(p.join('fixtures', fixture), (m) => fail(m));
@@ -93,7 +93,7 @@ void main() {
 
   group('CLI', () {
     ProcessResult run(List<String> args) =>
-        Process.runSync('dart', ['run', 'bin/widgetforge.dart', ...args]);
+        Process.runSync('dart', ['run', 'bin/widgettriage.dart', ...args]);
 
     test('json output on error fixture, exit 1', () {
       final r = run(['doctor', '--json', 'fixtures/err_entrypoint_missing']);

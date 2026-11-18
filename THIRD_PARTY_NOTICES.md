@@ -1,11 +1,11 @@
 # Third-Party Notices
 
-WidgetForge itself is licensed under the MIT License (see `LICENSE`, Copyright (c) 2026 z0rimo).
+WidgetTriage itself is licensed under the MIT License (see `LICENSE`, Copyright (c) 2026 z0rimo).
 
-This file lists third-party software that a WidgetForge **runtime** build uses or embeds, and third-party template files that are included in the test fixtures. It was drafted from the `LICENSE` files of the exact package versions pinned in `pubspec.lock`, as downloaded by `dart pub get`. It is not legal advice and has not been reviewed by a lawyer.
+This file lists third-party software that a WidgetTriage **runtime** build uses or embeds, and third-party template files that are included in the test fixtures. It was drafted from the `LICENSE` files of the exact package versions pinned in `pubspec.lock`, as downloaded by `dart pub get`. It is not legal advice and has not been reviewed by a lawyer.
 
 Scope and open points:
-- Only the runtime dependency closure is listed: `args`, `path`, `xml` and their dependencies `collection`, `meta`, `petitparser`. Development-only packages (`test`, `lints` and their dependencies) are not distributed with WidgetForge and are not listed.
+- Only the runtime dependency closure is listed: `args`, `path`, `xml` and their dependencies `collection`, `meta`, `petitparser`. Development-only packages (`test`, `lints` and their dependencies) are not distributed with WidgetTriage and are not listed.
 - A natively compiled executable (`dart compile exe`) also embeds the Dart runtime from the Dart SDK. The `LICENSE` file shipped with the SDK used for testing (Dart 3.8.0, the SDK bundled with Flutter 3.32.0) is reproduced below. Whether the AOT runtime contains further third-party components that need their own notices was NOT verified; check this before distributing a compiled binary. Source distribution does not embed the runtime.
 - The five `test/artifacts/*.apk` files are built by `aapt2` from manifests and resources written for this project (`test/tool/make_apk_fixtures.sh`); they contain no dex code and no library resources. The `android.jar` used as link input is not embedded.
 - Test fixtures contain files that are byte-identical to the app template of the Flutter SDK (`flutter create`): see the section "Flutter SDK app template" at the end of this file.

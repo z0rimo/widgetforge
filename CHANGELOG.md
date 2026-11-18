@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.0
+
+Rebrand release: WidgetForge is now **WidgetTriage**. No diagnostic logic changed.
+
+- Renamed: GitHub repository `z0rimo/widgetforge` -> `z0rimo/widgettriage` (GitHub redirects the old URL), Dart package and CLI executable `widgetforge` -> `widgettriage`, Agent Skill `widgetforge` -> `widgettriage` (`skills/widgettriage/SKILL.md`), `bin/widgettriage.dart`, `lib/widgettriage.dart`, and the opt-in test environment variables `WIDGETFORGE_*` -> `WIDGETTRIAGE_*`.
+- JSON report: `tool.name` is now `"widgettriage"` and `tool.version` is `"0.2.0"`. **Consumers that compare `tool.name` to `"widgetforge"` must accept the new value.** The product name inside free-text `notes` and `message` strings and the human-readable output also changes (verified over all fixtures: output is identical to 0.1.0 once "WidgetForge" is read as "WidgetTriage"). `schemaVersion` stays `"1"`; the schema's `tool.name` constant and `$id` follow the new name.
+- Unchanged: the 29 rules and their IDs (`WF1001`-`WF7004`), severities, exit codes 0/1/2, findings structure, fixtures and test expectations.
+- Upgrade: replace `widgetforge` with `widgettriage` in commands (`dart run bin/widgettriage.dart doctor --json <project>`), in `.claude/skills/` or `.agents/skills/` (copy `skills/widgettriage/`), and in any script that reads `tool.name`. No `widgetforge` alias is kept. Still not published to pub.dev (`publish_to: none`).
+- The v0.1.0 tag and Release are preserved as published; the history below is kept under its original name.
+
 ## 0.1.0
 
 First implementation. Not published to pub.dev (`publish_to: none`).

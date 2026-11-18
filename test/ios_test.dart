@@ -11,9 +11,9 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
-import 'package:widgetforge/src/ios/pbxproj.dart';
-import 'package:widgetforge/src/ios/plist.dart';
-import 'package:widgetforge/widgetforge.dart';
+import 'package:widgettriage/src/ios/pbxproj.dart';
+import 'package:widgettriage/src/ios/plist.dart';
+import 'package:widgettriage/widgettriage.dart';
 
 Report doctor(String fixture) {
   final loaded = loadProjects(p.join('fixtures', fixture), (m) => fail(m));
@@ -223,7 +223,7 @@ void main() {
   });
 
   group('CLI contract for iOS projects', () {
-    ProcessResult run(List<String> a) => Process.runSync('dart', ['run', 'bin/widgetforge.dart', ...a]);
+    ProcessResult run(List<String> a) => Process.runSync('dart', ['run', 'bin/widgettriage.dart', ...a]);
     test('iOS-only error project: exit 1, single JSON document, empty stderr', () {
       final r = run(['doctor', '--json', p.absolute('fixtures', 'err_ios_widget_not_embedded')]);
       expect(r.exitCode, 1);

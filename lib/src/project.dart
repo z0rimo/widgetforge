@@ -206,7 +206,7 @@ class AndroidProject {
     final notes = <String>[];
     for (final r in widgetReceivers.where((r) => !r.isMain)) {
       notes.add('Receiver ${r.name} is declared only in ${r.file}; build variants without that source set do not contain it '
-          '(observed with Gradle: debug-only receiver absent from the release APK). WidgetForge does not select a build variant.');
+          '(observed with Gradle: debug-only receiver absent from the release APK). WidgetTriage does not select a build variant.');
     }
     for (final set in sourceSets) {
       if (p.basename(set.path) == 'main') continue;

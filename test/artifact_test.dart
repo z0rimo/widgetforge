@@ -1,4 +1,4 @@
-/// `widgetforge verify` (APK / IPA artifacts): aapt2-built APK fixtures, synthetic
+/// `widgettriage verify` (APK / IPA artifacts): aapt2-built APK fixtures, synthetic
 /// archives, archive-safety limits and the CLI contract.
 ///
 /// Evidence level of the APK tests: the test/artifacts/*.apk files are built by `aapt2`
@@ -21,7 +21,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:test/test.dart';
-import 'package:widgetforge/widgetforge.dart';
+import 'package:widgettriage/widgettriage.dart';
 
 import 'accuracy_test.dart' show validate;
 import 'support/builders.dart';
@@ -391,7 +391,7 @@ void main() {
   });
 
   group('CLI', () {
-    ProcessResult run(List<String> args) => Process.runSync(Platform.resolvedExecutable, ['run', 'bin/widgetforge.dart', ...args]);
+    ProcessResult run(List<String> args) => Process.runSync(Platform.resolvedExecutable, ['run', 'bin/widgettriage.dart', ...args]);
 
     test('exit 0 / 1 and JSON-only stdout', () {
       final ok = run(['verify', '--json', 'test/artifacts/real_release_widget.apk']);
@@ -431,7 +431,7 @@ void main() {
     });
     test('doctor is unchanged (usage lists both commands, doctor still works)', () {
       final h = run(['--help']);
-      expect(h.stdout as String, allOf(contains('widgetforge doctor'), contains('widgetforge verify')));
+      expect(h.stdout as String, allOf(contains('widgettriage doctor'), contains('widgettriage verify')));
       final d = run(['doctor', '--json', 'fixtures/ok_basic']);
       expect(d.exitCode, 0);
       expect((jsonDecode(d.stdout as String) as Map)['checksRun'], isNot(contains('apk-widget-artifact')));

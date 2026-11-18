@@ -12,7 +12,7 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
-import 'package:widgetforge/widgetforge.dart';
+import 'package:widgettriage/widgettriage.dart';
 
 Report doctor(String fixture) {
   final loaded = loadProjects(p.join('fixtures', fixture), (m) => fail(m));
@@ -182,7 +182,7 @@ void main() {
   group('golden diagnostics (project path removed)', () {
     // Goldens were generated from reviewed output (lines checked against the
     // fixture sources). To update: print the `diagnostics` array of
-    // `dart run bin/widgetforge.dart doctor --json fixtures/<name>` into
+    // `dart run bin/widgettriage.dart doctor --json fixtures/<name>` into
     // test/golden/<name>.json and review the diff.
     for (final f in ['err_provider_indirect_subclass', 'err_entrypoint_two_activities_one_file', 'err_remoteviews_subclass_and_comment']) {
       test(f, () {

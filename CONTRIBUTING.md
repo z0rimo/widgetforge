@@ -1,6 +1,6 @@
-# Contributing to WidgetForge
+# Contributing to WidgetTriage
 
-Thanks for helping. WidgetForge is a read-only static diagnostics CLI; accuracy and honest scope matter more than coverage.
+Thanks for helping. WidgetTriage is a read-only static diagnostics CLI; accuracy and honest scope matter more than coverage.
 
 ## Before you open anything
 - Search existing issues. For a vulnerability, follow [.github/SECURITY.md](.github/SECURITY.md) and do not file a public issue.
@@ -37,7 +37,7 @@ Never delete or skip tests to make them pass.
 2. Implement the check under `lib/src/checks/` (or `lib/src/artifact/` for `verify`) and register it.
 3. Add a failing fixture `fixtures/err_<name>` that triggers exactly that code (copy `ok_basic`, break one thing) and, where useful, an `ok_<name>` fixture for the boundary case. Fixtures must be synthetic; do not copy real apps or third-party sample code.
 4. Add the expectation (code, file, line, evidence) to the tests (`test/doctor_test.dart`, `test/accuracy_test.dart`, `test/ios_test.dart` as appropriate).
-5. Add the entry to `schema/rule-catalog.json` and write `docs/errors/WFxxxx.md` (symptom, cause, detection scope, fix, fixture). Add the row to the README rule table and cover the code in `skills/widgetforge/SKILL.md`.
+5. Add the entry to `schema/rule-catalog.json` and write `docs/errors/WFxxxx.md` (symptom, cause, detection scope, fix, fixture). Add the row to the README rule table and cover the code in `skills/widgettriage/SKILL.md`.
 6. Run `dart analyze` and `dart test`: `test/catalog_test.dart` checks that the catalog, the code, the docs pages, the README table and the skill agree.
 
 ## Pull requests

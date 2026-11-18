@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/z0rimo/widgetforge/v0.1.0/schema/diagnostic-report.schema.json",
-  "title": "WidgetForge doctor report",
+  "$id": "https://raw.githubusercontent.com/z0rimo/widgettriage/v0.2.0/schema/diagnostic-report.schema.json",
+  "title": "WidgetTriage doctor report",
   "type": "object",
   "required": [
     "schemaVersion",
@@ -25,7 +25,7 @@
       ],
       "properties": {
         "name": {
-          "const": "widgetforge"
+          "const": "widgettriage"
         },
         "version": {
           "type": "string"

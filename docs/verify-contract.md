@@ -1,10 +1,10 @@
-# `widgetforge verify` contract (APK / IPA artifacts)
+# `widgettriage verify` contract (APK / IPA artifacts)
 
 `verify` inspects a **built** `.apk` or `.ipa`. `doctor` (source) is unchanged. Both print the same report shape
 (`schema/diagnostic-report.schema.json`, `schemaVersion` `"1"`); no field was added.
 
 ```sh
-widgetforge verify [--json] <file.apk|file.ipa>
+widgettriage verify [--json] <file.apk|file.ipa>
 ```
 
 | Exit | Meaning |
@@ -35,7 +35,7 @@ widgetforge verify [--json] <file.apk|file.ipa>
 | [WF7004](errors/WF7004.md) | **warning**: widget extension `MinimumOSVersion` < 14 (failure below 14 unverified) |
 
 Source vs. artifact: `WF2003`<->`WF6002`, `WF3002`<->`WF6004`, `WF3003`<->`WF6005`, `WF2004`<->`WF6001`, `WF5003`<->`WF7001`, `WF5004`<->`WF7002`, `WF5008`<->`WF7004`.
-A source finding that is absent from the artifact (or the reverse) points to a build variant, merger, shrinking or packaging difference; WidgetForge does not diff the two for you.
+A source finding that is absent from the artifact (or the reverse) points to a build variant, merger, shrinking or packaging difference; WidgetTriage does not diff the two for you.
 
 ## What is not checked (always written to `notes`)
 

@@ -1,6 +1,6 @@
 # iOS validation record (WidgetKit, Flutter sample)
 
-This page records what was **actually run** against the iOS side of WidgetForge 0.1.0 and what was not. It supports the
+This page records what was **actually run** against the iOS side of WidgetForge 0.1.0 (now WidgetTriage; v0.2.0 changes only the name) and what was not. It supports the
 iOS rules `WF5001`-`WF5008` (`doctor`); it does not cover `verify` on a real IPA.
 
 ## Environment

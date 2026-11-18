@@ -7,8 +7,8 @@ pubspec_overrides.yaml
 # --- Build outputs, snapshots, local executables ---
 build/
 *.snapshot
-/widgetforge
-/widgetforge.exe
+/widgettriage
+/widgettriage.exe
 coverage/
 
 # --- Logs and temporary files ---

@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:args/args.dart';
-import 'package:widgetforge/widgetforge.dart';
+import 'package:widgettriage/widgettriage.dart';
 
 const _usage = '''
-widgetforge $toolVersion - read-only doctor for Flutter Android and iOS home screen widgets
+widgettriage $toolVersion - read-only doctor for Flutter Android and iOS home screen widgets
 
-Usage: widgetforge doctor [--json] [path]
-       widgetforge verify [--json] <file.apk|file.ipa>
+Usage: widgettriage doctor [--json] [path]
+       widgettriage verify [--json] <file.apk|file.ipa>
 
 doctor reads a Flutter project's source. verify reads a built .apk or .ipa
 (read-only, never extracted to disk, never executed).
@@ -38,17 +38,17 @@ void main(List<String> args) {
     return;
   }
   if (res['version'] as bool) {
-    stdout.writeln('widgetforge $toolVersion');
+    stdout.writeln('widgettriage $toolVersion');
     return;
   }
   final rest = res.rest;
   if (rest.isNotEmpty && rest.first == 'verify') {
-    if (rest.length != 2) _fail('widgetforge: verify needs exactly one .apk or .ipa file\n$_usage${parser.usage}');
+    if (rest.length != 2) _fail('widgettriage: verify needs exactly one .apk or .ipa file\n$_usage${parser.usage}');
     Report report;
     try {
       report = verifyArtifact(rest[1]);
     } on ArchiveException catch (e) {
-      _fail('widgetforge: ${e.message}');
+      _fail('widgettriage: ${e.message}');
     }
     if (res['json'] as bool) {
       stdout.writeln(const JsonEncoder.withIndent('  ').convert(report.toJson()));
@@ -61,7 +61,7 @@ void main(List<String> args) {
     _fail('$_usage${parser.usage}');
   }
   final path = rest.length == 2 ? rest[1] : '.';
-  final loaded = loadProjects(path, (m) => _fail('widgetforge: $m'));
+  final loaded = loadProjects(path, (m) => _fail('widgettriage: $m'));
   final report = runDoctor(loaded!.android, ios: loaded.ios, loadNotes: loaded.notes);
   if (res['json'] as bool) {
     stdout.writeln(const JsonEncoder.withIndent('  ').convert(report.toJson()));

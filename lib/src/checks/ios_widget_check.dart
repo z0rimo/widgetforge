@@ -183,7 +183,7 @@ List<Diagnostic> checkIosWidgets(IosProject ios, List<String> dartFiles, List<St
       final gen = ios.setting(w, c, 'GENERATE_INFOPLIST_FILE');
       if (gen.value == 'YES') generated = true;
       if (v.unknown) {
-        note('iOS: INFOPLIST_FILE of "${w.name}" ($c) depends on a setting WidgetForge cannot resolve; its Info.plist was not checked.');
+        note('iOS: INFOPLIST_FILE of "${w.name}" ($c) depends on a setting WidgetTriage cannot resolve; its Info.plist was not checked.');
       } else if (v.value != null) {
         infoByValue.putIfAbsent(v.value!, () => []).add(c);
       }
@@ -268,7 +268,7 @@ List<Diagnostic> checkIosWidgets(IosProject ios, List<String> dartFiles, List<St
             wb.value!.contains(r'$(') || hb.value!.contains(r'$(')) {
           bool bad0(SettingValue s) => s.unknown || s.value == null || s.value!.contains(r'$(');
           final which = [if (bad0(wb)) '"${w.name}"', if (bad0(hb)) '"${host.name}"'].join(' and ');
-          note('iOS: PRODUCT_BUNDLE_IDENTIFIER of $which ($c) depends on a setting WidgetForge cannot resolve; '
+          note('iOS: PRODUCT_BUNDLE_IDENTIFIER of $which ($c) depends on a setting WidgetTriage cannot resolve; '
               'the bundle identifier prefix was not checked for that configuration.');
           continue;
         }
@@ -296,7 +296,7 @@ List<Diagnostic> checkIosWidgets(IosProject ios, List<String> dartFiles, List<St
     for (final c in configs) {
       final d = ios.setting(w, c, 'IPHONEOS_DEPLOYMENT_TARGET');
       if (d.unknown) {
-        note('iOS: IPHONEOS_DEPLOYMENT_TARGET of "${w.name}" ($c) depends on a setting WidgetForge cannot resolve; it was not checked.');
+        note('iOS: IPHONEOS_DEPLOYMENT_TARGET of "${w.name}" ($c) depends on a setting WidgetTriage cannot resolve; it was not checked.');
         continue;
       }
       if (d.value == null) continue;
