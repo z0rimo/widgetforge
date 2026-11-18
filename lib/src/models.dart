@@ -1,7 +1,7 @@
 /// Severity of a diagnostic.
 enum Severity { error, warning, info }
 
-const toolVersion = '0.2.0';
+const toolVersion = '0.3.0';
 const reportSchemaVersion = '1';
 
 /// A single finding. Every field is part of the public JSON contract

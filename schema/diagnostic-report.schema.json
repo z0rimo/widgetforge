@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/z0rimo/widgettriage/v0.2.0/schema/diagnostic-report.schema.json",
+  "$id": "https://raw.githubusercontent.com/z0rimo/widgettriage/v0.3.0/schema/diagnostic-report.schema.json",
   "title": "WidgetTriage doctor report",
   "type": "object",
   "required": [

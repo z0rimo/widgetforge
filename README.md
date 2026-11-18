@@ -21,7 +21,7 @@ widget package and also works for hand-written native widgets. It never modifies
 
 > WidgetTriage was formerly known as WidgetForge. The project was renamed in v0.2.0. Existing v0.1.0 releases and diagnostic codes remain preserved.
 
-> **Status: v0.2.0** (a rename of v0.1.0; checks and diagnostic codes are unchanged). Not published to pub.dev. Android checks are the most verified; iOS rules were exercised on one Xcode 26.6 / iOS 26.5 simulator sample ([docs/ios-validation.md](docs/ios-validation.md)); IPA verification is Experimental. Licensed under the [MIT License](LICENSE).
+> **Status: v0.3.0** (the checks and diagnostic codes are unchanged since v0.1.0; v0.2.0 was the rename, v0.3.0 adds the Agent Skill installer). Not published to pub.dev. Android checks are the most verified; iOS rules were exercised on one Xcode 26.6 / iOS 26.5 simulator sample ([docs/ios-validation.md](docs/ios-validation.md)); IPA verification is Experimental. Licensed under the [MIT License](LICENSE).
 
 ## At a glance
 
@@ -33,6 +33,16 @@ widget package and also works for hand-written native widgets. It never modifies
 - **Not:** a renderer, a build, a runtime test or an auto-fixer. It never modifies the inspected project.
 
 ## Quick start
+
+Five steps from a fresh machine (details and what was verified follow below):
+
+1. **Get the CLI** (needs a Dart SDK, 3.5 or newer): `git clone https://github.com/z0rimo/widgettriage.git && cd widgettriage && dart pub get`
+2. **Optional, recommended for agents:** build one executable, `mkdir -p build && dart compile exe bin/widgettriage.dart -o build/widgettriage`, and put `build/` on your `PATH` (or remember its full path).
+3. **Diagnose a Flutter project:** `dart run bin/widgettriage.dart doctor --json /path/to/flutter_project` (or `build/widgettriage doctor --json /path/to/flutter_project`). Exit code 0 = no errors, 1 = errors found, 2 = usage error or unusable input. The tool only reads; it never changes your project.
+4. **Optional, for Codex / Claude Code:** install the agent skill into your project from this checkout: `dart run scripts/install_agent_skill.dart --agent both --scope project --project /path/to/flutter_project` (add `--dry-run` first to preview; see [AI agent integration](#ai-agent-integration)). Run it from the checkout and name the Flutter project with `--project`; the checkout itself is refused as a target.
+5. **Ask your agent** about the widget problem. The skill tells it to run `widgettriage` from `PATH` or from a path you give it, so tell the agent where the executable is if it is not on `PATH`.
+
+What it does not do: render a widget, build the app, test on a device, diagnose every runtime failure, or fix anything automatically.
 
 Requires a Dart SDK that satisfies `environment.sdk` in `pubspec.yaml` (`^3.5.0`, i.e. Dart 3.5 or newer and below 4.0).
 **Main verification: Dart 3.8.0 (Flutter 3.32.0) on Linux.** On Dart 3.5.4 (Linux) `dart analyze` was clean and all 302 tests passed once; Dart 3.5.0 itself and other platforms were not tested.
@@ -87,7 +97,7 @@ If you do use a launcher, check that stdout parses as one JSON document before t
 
 ### How to read a result
 
-WidgetTriage v0.2.0 is a static diagnostic tool for Android and iOS projects. Read the JSON in this order:
+WidgetTriage v0.3.0 is a static diagnostic tool for Android and iOS projects. Read the JSON in this order:
 
 - `diagnostics[]` are the findings, each with a `file`, a `line` (can be `null` when no single line applies), `evidence` and `fix`. Almost all are `error` (counted in `summary.errors`, exit code 1); WF7002 and WF7004 (IPA, unverified) are `warning` and leave the exit code at 0, so read `diagnostics[]` even when the exit is 0.
 - `notes[]` are plain strings that are **not** diagnostics: they change neither `summary` nor the exit code. They record
@@ -111,7 +121,7 @@ A project without findings (`doctor --json fixtures/ok_basic`, exit code 0):
 ```json
 {
   "schemaVersion": "1",
-  "tool": { "name": "widgettriage", "version": "0.2.0" },
+  "tool": { "name": "widgettriage", "version": "0.3.0" },
   "summary": { "errors": 0, "warnings": 0, "infos": 0 },
   "checksRun": ["manifest-receivers", "provider-xml", "remoteviews-supported-views", "flutter-activity-entrypoint"],
   "notes": [],

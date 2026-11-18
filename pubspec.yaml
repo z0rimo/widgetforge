@@ -1,6 +1,6 @@
 name: widgettriage
 description: Read-only doctor CLI that statically diagnoses Flutter home screen widget (Android AppWidget/RemoteViews and iOS WidgetKit) configuration problems, with AI-friendly JSON output.
-version: 0.2.0
+version: 0.3.0
 repository: https://github.com/z0rimo/widgettriage
 publish_to: none
 
