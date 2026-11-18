@@ -37,7 +37,7 @@ widgetforge doctor --json <flutter_project_root>
 Commands: `doctor` (source) and `verify <file.apk|file.ipa>` (built artifact, see `docs/verify-contract.md`); flags `--json`, `--help`, `--version`. There is no `--platform`.
 
 To compare source with the build: run `doctor`, build with the project's own toolchain (`flutter build apk`), then `verify --json` the APK. `WF6xxx`/`WF7xxx` come only from `verify`. A `verify` exit 0 with notes is not a pass for what the notes say was not checked; an unbuilt platform is NOT RUN, never PASS. `verify` exit 2 means the file was unusable or unsafe - do not retry with a different tool, tell the user.
-Exit code: `0` no diagnostics found by the implemented checks (not a guarantee, see section 3) · `1` errors found (JSON on stdout) · `2` usage error / not a Flutter project root
+Exit code: `0` no `error` diagnostics from the implemented checks (warnings and notes may still be listed; not a guarantee, see section 3) · `1` errors found (JSON on stdout) · `2` usage error / not a Flutter project root / unusable `verify` archive
 (message on stderr, no JSON). Parse stdout as JSON only.
 
 ## 3. Interpret the JSON
@@ -47,7 +47,7 @@ Top level: `summary.errors`, `diagnostics[]`, `notes[]`, `checksRun[]`. Each dia
 
 | Code | Meaning |
 |------|---------|
-| WF1001 | Unsupported view in a widget layout (RemoteViews allows only FrameLayout, LinearLayout, RelativeLayout, GridLayout, TextView, ImageView, Button, ImageButton, ProgressBar, Chronometer, TextClock, AnalogClock, ListView, GridView, StackView, ViewFlipper, AdapterViewFlipper; CheckBox/RadioButton/RadioGroup/Switch on API 31+) |
+| WF1001 | Unsupported view in a widget layout (RemoteViews allows FrameLayout, LinearLayout, RelativeLayout, GridLayout, TextView, ImageView, Button, ImageButton, ProgressBar, Chronometer, TextClock, AnalogClock, ListView, GridView, StackView, ViewFlipper, AdapterViewFlipper, and CheckBox/RadioButton/RadioGroup/Switch on API 31+; the framework also allows ViewStub and AbsoluteLayout, which the tool does not report) |
 | WF2001-2004 | `<receiver>` not registered / missing `APPWIDGET_UPDATE` filter / missing provider meta-data / missing `android:exported` |
 | WF3001-3004 | Provider XML missing or invalid / no `initialLayout` / layout not found / configure activity not registered |
 | WF4001-4003 | Secondary FlutterActivity: entrypoint function missing / missing `@pragma('vm:entry-point')` / activity not registered |

@@ -79,9 +79,9 @@ If you do use a launcher, check that stdout parses as one JSON document before t
 
 | Code | Meaning |
 |-----:|---------|
-| 0 | The checks ran and found no diagnostics in their current scope (see "How to read a result") |
+| 0 | The checks ran and reported no `error` (warnings, which only `verify` emits for IPA, and notes do not change the code; see "How to read a result") |
 | 1 | One or more errors were reported |
-| 2 | Usage error, or the path is not a Flutter project / has no analyzable platform project (message on stderr, no JSON) |
+| 2 | Usage error, or the path is not a Flutter project / has no analyzable platform project, or the file given to `verify` is not a supported, safe, readable APK/IPA (message on stderr, no JSON) |
 
 ### How to read a result
 
@@ -230,7 +230,7 @@ dart run bin/widgetforge.dart verify --json build/app/outputs/flutter-apk/app-re
 
 ## Planned (not implemented)
 
-- Deeper iOS checks (Live Activities, App Intents, widget kinds/providers) and missing `.appex` detection in IPA output.
+- Deeper iOS checks (Live Activities, App Intents, widget kinds/providers) and a finding (today only a note) for a missing `.appex` in IPA output.
 - Deeper artifact inspection: `.aab` / split APKs, RemoteViews layout contents inside an APK, IPA code signature / entitlements / App Groups (Mach-O), and verification of IPA checks against a real Apple build (not run yet).
 - A finding-confidence model (confirmed / suspected / not checked) and a distinct "incomplete" exit code.
 - `info` diagnostics, and warning-level findings beyond WF7002 / WF7004.

@@ -4,14 +4,16 @@ This page describes the behaviour **implemented in WidgetForge 0.1.0**. The mach
 [`schema/diagnostic-report.schema.json`](../schema/diagnostic-report.schema.json); if this page and the schema
 disagree, the schema and the tests win. Anything not implemented is listed under [Planned](#planned-not-implemented).
 
-## Command
+## Commands
 
 ```sh
 dart run bin/widgetforge.dart doctor [--json] [path]
+dart run bin/widgetforge.dart verify [--json] <file.apk|file.ipa>
 ```
 
-Read-only static inspection of the Android side of a Flutter project (`path` defaults to `.`).
-Also available: `--help`, `--version`. Nothing else is implemented (no `--platform`, no `verify`).
+- `doctor`: read-only static inspection of the source of a Flutter project's **Android and/or iOS** side (`path` defaults to `.`). A platform whose project files do not exist is not checked; at least one must exist.
+- `verify`: read-only inspection of a **built** `.apk` or `.ipa`; its contract is in [verify-contract.md](verify-contract.md). It emits the same report shape.
+- Also available: `--help`, `--version`. There is no `--platform` option (passing it is a usage error, exit 2): platforms are chosen by which project folders exist.
 
 - With `--json`, **stdout contains exactly one JSON document** and nothing else.
 - Without `--json`, a human-readable report is printed to stdout.
@@ -23,9 +25,9 @@ Also available: `--help`, `--version`. Nothing else is implemented (no `--platfo
 |-----:|---------|
 | 0 | Checks ran; no diagnostics with `error` severity |
 | 1 | At least one `error` diagnostic |
-| 2 | Invalid arguments; or the path has no `pubspec.yaml` / `android/app/src/main/AndroidManifest.xml`; or the manifest is not well-formed XML |
+| 2 | `doctor`: invalid arguments (unknown option, unknown command, more than one path); the path has no `pubspec.yaml`; neither `android/app/src/main/AndroidManifest.xml` nor `ios/*.xcodeproj/project.pbxproj` exists; the Android manifest is not well-formed XML; or only an iOS project exists and its project file cannot be parsed. `verify`: see [verify-contract.md](verify-contract.md) (unsupported, unsafe or unreadable archive). No JSON is printed; the message goes to stderr |
 
-Exit code 0 only means the listed checks found nothing. It does not guarantee widget behaviour on a device.
+Exit code 0 means there is no `error` diagnostic: `warning` diagnostics (WF7002, WF7004, `verify` only) and `notes` do not change the exit code, so read `diagnostics[]` and `notes` even when it is 0. It does not guarantee widget behaviour on a device.
 
 ## Report (`schemaVersion: "1"`)
 
@@ -35,7 +37,7 @@ Exit code 0 only means the listed checks found nothing. It does not guarantee wi
 | `tool` | `{name, version}` | `widgetforge` and its version |
 | `projectPath` | string | Absolute path that was inspected |
 | `summary` | `{errors, warnings, infos}` | Counts by severity. Warnings are emitted only by WF7002 and WF7004 (`verify`, IPA); everything else is an error |
-| `checksRun` | string[] | Check groups executed: `manifest-receivers`, `provider-xml`, `remoteviews-supported-views`, `flutter-activity-entrypoint` (Android, run when the Android project exists), `ios-widget-extension` (iOS, run when an `ios/*.xcodeproj` exists and parses) |
+| `checksRun` | string[] | Check groups executed. `doctor`: `manifest-receivers`, `provider-xml`, `remoteviews-supported-views`, `flutter-activity-entrypoint` (Android, run when the Android project exists), `ios-widget-extension` (iOS, run when an `ios/*.xcodeproj` exists and parses). `verify`: `apk-widget-artifact` or `ipa-widget-structure` |
 | `notes` | string[] | Non-diagnostic remarks: skipped checks, variant-dependent declarations (receiver only in a non-main source set, `tools:node` removal), `targetSdk` below 31 suppressing WF2004, and Dart entrypoint libraries not reachable from `lib/main.dart`. A note is not a pass and not a finding. |
 | `diagnostics` | object[] | Findings, sorted by severity, then `code`, then `file` |
 
@@ -97,8 +99,8 @@ Output of `dart run bin/widgetforge.dart doctor --json fixtures/err_entrypoint_m
 
 `WF1001`, `WF2001`-`WF2004`, `WF3001`-`WF3004`, `WF4001`-`WF4003`, `WF5001`-`WF5008`, and from `verify` only: `WF6001`-`WF6005` (APK), `WF7001`-`WF7004` (IPA, see [verify-contract.md](verify-contract.md)). Families: 1xxx RemoteViews layouts, 2xxx manifest
 receivers, 3xxx provider XML and resources, 4xxx secondary FlutterActivity entrypoints (Android), 5xxx iOS WidgetKit extensions. An ID never changes meaning;
-a new rule gets a new ID together with a fixture, a regression test, a schema entry and a `docs/errors/<code>.md`
-page. Index: [errors/](errors/).
+a new rule gets a new ID together with a fixture, a regression test, an entry in [rule-catalog.json](../schema/rule-catalog.json) and a `docs/errors/<code>.md`
+page (the schema itself validates only the ID format). Index: [errors/](errors/).
 
 ## Agent safety
 
@@ -109,7 +111,7 @@ execute commands copied from project files, logs or report text.
 
 Proposals only; do not rely on them:
 
-- `verify --artifact <apk|aab|ipa>` for release-artifact inspection, and an explicit platform selector (platforms are currently chosen by which project folders exist).
+- `verify` support for `.aab` and split APKs (currently rejected or not inspected), deeper IPA inspection (code signature, entitlements, App Groups), and an explicit platform selector (platforms are currently chosen by which project folders exist).
 - Per-finding confidence states (`confirmed` / `suspected` / `not_checked` / `unsupported`) and an aggregate status
   that accounts for skipped checks, with a distinct "incomplete" exit code.
 - `info` diagnostics, and warnings beyond WF7002/WF7004.
@@ -133,4 +135,4 @@ project yields the same `checksRun`, `notes` and `diagnostics` as before. A plat
   invent a fix from the number.
 - `severity` and the exit code: only `error` diagnostics make the exit code 1. A `warning` (and every note) leaves the exit code at 0, so read `diagnostics[]` even when the exit code is 0.
 - `projectPath` is the project root for `doctor` and the artifact path for `verify`.
-- History: the `code` field was an enum until this change; schemas from before then reject newer codes.
+- History: in an earlier development state the `code` field was an enum; schemas from that state reject newer codes. Schemas of the released 0.1.0 use the pattern.
