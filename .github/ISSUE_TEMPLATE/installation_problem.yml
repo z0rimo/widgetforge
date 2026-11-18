@@ -1,5 +1,5 @@
 name: Installation / CLI problem
-description: Trouble installing or running WidgetForge, or JSON output is polluted
+description: Trouble installing or running WidgetTriage, or JSON output is polluted
 title: "[Install]: "
 body:
   - type: markdown
@@ -10,9 +10,9 @@ body:
   - type: dropdown
     id: method
     attributes:
-      label: How you run WidgetForge
+      label: How you run WidgetTriage
       options:
-        - dart run bin/widgetforge.dart (from a checkout)
+        - dart run bin/widgettriage.dart (from a checkout)
         - compiled executable (dart compile exe)
         - dart pub global activate (path or git)
         - used by an AI agent / the agent skill
@@ -22,8 +22,8 @@ body:
   - type: input
     id: version
     attributes:
-      label: WidgetForge version
-      description: Output of `widgetforge --version`, or the release tag / commit.
+      label: WidgetTriage version
+      description: Output of `widgettriage --version`, or the release tag / commit.
     validations:
       required: true
   - type: input

@@ -7,7 +7,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:widgetforge/src/artifact/zip_reader.dart' show crc32;
+import 'package:widgettriage/src/artifact/zip_reader.dart' show crc32;
 
 // ---- ZIP -------------------------------------------------------------------
 

@@ -1,9 +1,9 @@
 /// Optional macOS/Xcode integration test (skipped everywhere else, including Linux CI).
 ///
 /// Run on a Mac after creating samples with Xcode (see the private validation runbook):
-///   WIDGETFORGE_XCODE_GOOD_SAMPLES=/path/a:/path/b dart test test/macos_integration_test.dart
-///   WIDGETFORGE_XCODE_BAD_SAMPLES=/path/c=WF5001,/path/d=WF5004 ...
-/// GOOD samples are projects Xcode created and builds: WidgetForge must report NO diagnostics
+///   WIDGETTRIAGE_XCODE_GOOD_SAMPLES=/path/a:/path/b dart test test/macos_integration_test.dart
+///   WIDGETTRIAGE_XCODE_BAD_SAMPLES=/path/c=WF5001,/path/d=WF5004 ...
+/// GOOD samples are projects Xcode created and builds: WidgetTriage must report NO diagnostics
 /// (any finding is a false positive until proven otherwise). BAD samples map a project to the
 /// single code it must report. Nothing here runs xcodebuild; building is done by the runbook scripts.
 library;
@@ -11,7 +11,7 @@ library;
 import 'dart:io';
 
 import 'package:test/test.dart';
-import 'package:widgetforge/widgetforge.dart';
+import 'package:widgettriage/widgettriage.dart';
 
 Report doctorAt(String path) {
   final loaded = loadProjects(path, (m) => fail(m));
@@ -19,10 +19,10 @@ Report doctorAt(String path) {
 }
 
 void main() {
-  final good = (Platform.environment['WIDGETFORGE_XCODE_GOOD_SAMPLES'] ?? '').split(':').where((s) => s.isNotEmpty).toList();
-  final bad = (Platform.environment['WIDGETFORGE_XCODE_BAD_SAMPLES'] ?? '').split(',').where((s) => s.contains('=')).toList();
+  final good = (Platform.environment['WIDGETTRIAGE_XCODE_GOOD_SAMPLES'] ?? '').split(':').where((s) => s.isNotEmpty).toList();
+  final bad = (Platform.environment['WIDGETTRIAGE_XCODE_BAD_SAMPLES'] ?? '').split(',').where((s) => s.contains('=')).toList();
   final enabled = Platform.isMacOS && (good.isNotEmpty || bad.isNotEmpty);
-  const why = 'Opt-in: macOS with WIDGETFORGE_XCODE_GOOD_SAMPLES / WIDGETFORGE_XCODE_BAD_SAMPLES set.';
+  const why = 'Opt-in: macOS with WIDGETTRIAGE_XCODE_GOOD_SAMPLES / WIDGETTRIAGE_XCODE_BAD_SAMPLES set.';
 
   test('macOS/Xcode samples configured', () {}, skip: enabled ? false : why);
 

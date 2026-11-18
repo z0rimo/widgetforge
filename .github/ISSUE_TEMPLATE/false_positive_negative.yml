@@ -1,5 +1,5 @@
 name: False positive / false negative
-description: A diagnostic that is wrong, or a problem WidgetForge should have reported but did not
+description: A diagnostic that is wrong, or a problem WidgetTriage should have reported but did not
 title: "[Accuracy]: "
 body:
   - type: markdown
@@ -37,8 +37,8 @@ body:
   - type: input
     id: version
     attributes:
-      label: WidgetForge version
-      description: Output of `widgetforge --version`, or the release tag / commit.
+      label: WidgetTriage version
+      description: Output of `widgettriage --version`, or the release tag / commit.
     validations:
       required: true
   - type: input
@@ -72,7 +72,7 @@ body:
     id: json
     attributes:
       label: JSON output
-      description: Output of `widgetforge doctor --json <path>` (or `verify --json`), with private paths removed.
+      description: Output of `widgettriage doctor --json <path>` (or `verify --json`), with private paths removed.
       render: json
     validations:
       required: true

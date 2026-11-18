@@ -11,7 +11,7 @@ class SettingValue {
   /// Expanded value; null when the setting is not set in the files we can read.
   final String? value;
 
-  /// True when the value depends on something WidgetForge cannot resolve
+  /// True when the value depends on something WidgetTriage cannot resolve
   /// (unreadable xcconfig, unsupported variable/modifier, conditional setting).
   final bool unknown;
 }
@@ -237,7 +237,7 @@ class IosProject {
   }
 
   /// Absolute path of a file reference or group, or null when its source tree
-  /// is not one WidgetForge understands (e.g. BUILT_PRODUCTS_DIR, SDKROOT).
+  /// is not one WidgetTriage understands (e.g. BUILT_PRODUCTS_DIR, SDKROOT).
   String? filePath(String id) {
     final o = obj(id);
     if (o == null) return null;

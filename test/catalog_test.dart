@@ -7,7 +7,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:test/test.dart';
-import 'package:widgetforge/widgetforge.dart';
+import 'package:widgettriage/widgettriage.dart';
 
 import 'accuracy_test.dart' show validate;
 
@@ -106,7 +106,7 @@ void main() {
   });
 
   test('SKILL.md covers every rule ID (by ID or range)', () {
-    final skill = File('skills/widgetforge/SKILL.md').readAsStringSync();
+    final skill = File('skills/widgettriage/SKILL.md').readAsStringSync();
     final ranges = RegExp(r'WF([0-9]{4})-(?:WF)?([0-9]{1,4})').allMatches(skill).map((m) {
       final lo = int.parse(m.group(1)!);
       final hiRaw = m.group(2)!;
@@ -148,7 +148,7 @@ void main() {
       expect(codeSchema['pattern'], r'^WF[0-9]{4}$');
       expect(codeSchema.containsKey('enum'), isFalse);
       expect(schema['properties']['schemaVersion']['const'], '1');
-      expect(schema[r'$id'], contains('z0rimo/widgetforge'));
+      expect(schema[r'$id'], contains('z0rimo/widgettriage'));
     });
     test('all 29 current IDs and a well-formed unknown ID are accepted; malformed values are rejected', () {
       for (final id in [...ids, 'WF9999', 'WF0000']) {

@@ -1,6 +1,6 @@
 {
   "catalogVersion": "1",
-  "description": "Rule IDs implemented by this version of WidgetForge. The report schema validates only the ID format; this catalog says which IDs exist and what they are. maturity: 'tested' = covered by fixtures/real-build comparisons described in the rule's page; 'experimental' = iOS, not verified with Xcode or a real Apple build.",
+  "description": "Rule IDs implemented by this version of WidgetTriage. The report schema validates only the ID format; this catalog says which IDs exist and what they are. maturity: 'tested' = covered by fixtures/real-build comparisons described in the rule's page; 'experimental' = iOS, not verified with Xcode or a real Apple build.",
   "rules": [
     {
       "id": "WF1001",

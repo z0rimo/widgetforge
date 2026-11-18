@@ -5,7 +5,7 @@ import 'zip_reader.dart';
 
 const checkIpaStructure = 'ipa-widget-structure';
 
-/// Extension point identifier WidgetForge treats as a WidgetKit extension.
+/// Extension point identifier WidgetTriage treats as a WidgetKit extension.
 /// Listed as a possible value on Apple's NSExtensionPointIdentifier page; its use for widget
 /// extensions is not described there and was not confirmed with a real build (see docs/errors/WF5002.md).
 const widgetExtensionPoint = 'com.apple.widgetkit-extension';

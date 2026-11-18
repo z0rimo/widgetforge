@@ -5,9 +5,9 @@ library;
 import 'dart:io';
 
 import 'package:test/test.dart';
-import 'package:widgetforge/src/source/dart_source.dart';
-import 'package:widgetforge/src/source/lexer.dart';
-import 'package:widgetforge/src/source/native_source.dart';
+import 'package:widgettriage/src/source/dart_source.dart';
+import 'package:widgettriage/src/source/lexer.dart';
+import 'package:widgettriage/src/source/native_source.dart';
 
 late Directory tmp;
 

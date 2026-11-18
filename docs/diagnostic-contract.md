@@ -1,14 +1,14 @@
 # Diagnostic Report Contract (v1)
 
-This page describes the behaviour **implemented in WidgetForge 0.1.0**. The machine-readable source of truth is
+This page describes the behaviour **implemented in WidgetTriage 0.2.0 (identical to 0.1.0 apart from the tool name and version)**. The machine-readable source of truth is
 [`schema/diagnostic-report.schema.json`](../schema/diagnostic-report.schema.json); if this page and the schema
 disagree, the schema and the tests win. Anything not implemented is listed under [Planned](#planned-not-implemented).
 
 ## Commands
 
 ```sh
-dart run bin/widgetforge.dart doctor [--json] [path]
-dart run bin/widgetforge.dart verify [--json] <file.apk|file.ipa>
+dart run bin/widgettriage.dart doctor [--json] [path]
+dart run bin/widgettriage.dart verify [--json] <file.apk|file.ipa>
 ```
 
 - `doctor`: read-only static inspection of the source of a Flutter project's **Android and/or iOS** side (`path` defaults to `.`). A platform whose project files do not exist is not checked; at least one must exist.
@@ -34,7 +34,7 @@ Exit code 0 means there is no `error` diagnostic: `warning` diagnostics (WF7002,
 | Field | Type | Meaning |
 |-------|------|---------|
 | `schemaVersion` | `"1"` | Contract version |
-| `tool` | `{name, version}` | `widgetforge` and its version |
+| `tool` | `{name, version}` | `widgettriage` and its version |
 | `projectPath` | string | Absolute path that was inspected |
 | `summary` | `{errors, warnings, infos}` | Counts by severity. Warnings are emitted only by WF7002 and WF7004 (`verify`, IPA); everything else is an error |
 | `checksRun` | string[] | Check groups executed. `doctor`: `manifest-receivers`, `provider-xml`, `remoteviews-supported-views`, `flutter-activity-entrypoint` (Android, run when the Android project exists), `ios-widget-extension` (iOS, run when an `ios/*.xcodeproj` exists and parses). `verify`: `apk-widget-artifact` or `ipa-widget-structure` |
@@ -57,14 +57,14 @@ Exit code 0 means there is no `error` diagnostic: `warning` diagnostics (WF7002,
 
 ### Example
 
-Output of `dart run bin/widgetforge.dart doctor --json fixtures/err_entrypoint_missing` (only `projectPath` shortened):
+Output of `dart run bin/widgettriage.dart doctor --json fixtures/err_entrypoint_missing` (only `projectPath` shortened):
 
 ```json
 {
   "schemaVersion": "1",
   "tool": {
-    "name": "widgetforge",
-    "version": "0.1.0"
+    "name": "widgettriage",
+    "version": "0.2.0"
   },
   "projectPath": "/path/to/flutter_project",
   "summary": {
@@ -126,7 +126,7 @@ project yields the same `checksRun`, `notes` and `diagnostics` as before. A plat
 ### Rule IDs, the schema and the rule catalog
 
 - `diagnostics[].code` is a string that must match `^WF[0-9]{4}$`. **The schema validates the ID's format only, not that the ID exists.** A report with a well-formed
-  but unknown ID (for example one produced by a newer WidgetForge) still validates.
+  but unknown ID (for example one produced by a newer WidgetTriage) still validates.
 - [`schema/rule-catalog.json`](../schema/rule-catalog.json) lists the IDs implemented by that version (`platform`, `command`, `severity`, `maturity`, `title`, `docs`).
   Tests keep it identical to the codes the implementation can emit, to `docs/errors/` and to the README table. The catalog is hand-maintained data checked against
   the code, not generated from it, because titles and docs live in the docs pages.

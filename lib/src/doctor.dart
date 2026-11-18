@@ -13,7 +13,7 @@ import 'project.dart';
 ///
 /// [android] and [ios] are the platforms that exist in the project; either may
 /// be null, not both. With only [android] the result is identical to the
-/// Android-only versions of WidgetForge.
+/// Android-only versions of WidgetTriage.
 Report runDoctor(AndroidProject? android, {IosProject? ios, List<String> loadNotes = const []}) {
   final diags = <Diagnostic>[];
   final notes = <String>[...loadNotes];
@@ -58,7 +58,7 @@ Report runDoctor(AndroidProject? android, {IosProject? ios, List<String> loadNot
 }
 
 String formatHuman(Report r, {String command = 'doctor'}) {
-  final b = StringBuffer('WidgetForge $command: ${r.projectPath}\n\n');
+  final b = StringBuffer('WidgetTriage $command: ${r.projectPath}\n\n');
   for (final d in r.diagnostics) {
     b.writeln('[${d.severity.name.toUpperCase()}] ${d.code} ${d.title}');
     b.writeln('  at ${d.file}${d.line != null ? ':${d.line}' : ''}');

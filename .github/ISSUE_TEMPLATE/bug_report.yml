@@ -1,5 +1,5 @@
 name: Bug report
-description: WidgetForge crashes, hangs, exits with the wrong code, or prints invalid JSON
+description: WidgetTriage crashes, hangs, exits with the wrong code, or prints invalid JSON
 title: "[Bug]: "
 body:
   - type: markdown
@@ -10,8 +10,8 @@ body:
   - type: input
     id: version
     attributes:
-      label: WidgetForge version
-      description: Output of `widgetforge --version`, or the release tag / commit.
+      label: WidgetTriage version
+      description: Output of `widgettriage --version`, or the release tag / commit.
     validations:
       required: true
   - type: input
@@ -25,7 +25,7 @@ body:
     id: command
     attributes:
       label: Command that was run
-      placeholder: widgetforge doctor --json <path>
+      placeholder: widgettriage doctor --json <path>
     validations:
       required: true
   - type: textarea

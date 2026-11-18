@@ -1,7 +1,7 @@
 /// Severity of a diagnostic.
 enum Severity { error, warning, info }
 
-const toolVersion = '0.1.0';
+const toolVersion = '0.2.0';
 const reportSchemaVersion = '1';
 
 /// A single finding. Every field is part of the public JSON contract
@@ -68,7 +68,7 @@ class Report {
 
   Map<String, Object?> toJson() => {
         'schemaVersion': reportSchemaVersion,
-        'tool': {'name': 'widgetforge', 'version': toolVersion},
+        'tool': {'name': 'widgettriage', 'version': toolVersion},
         'projectPath': projectPath,
         'summary': {
           'errors': count(Severity.error),
