@@ -1,26 +1,19 @@
-## What changed and why
+## What changed?
 
-<!-- One or two sentences. Link the issue if there is one. -->
+<!-- One or two sentences: what and why. Link the issue if there is one. -->
 
-## Verification performed
+## Verification
 
-There is no automated CI. Paste what you actually ran and its result; write **NOT RUN** for anything you did not run.
+There is no automated CI, and these boxes are not checked by GitHub. Tick only what is true.
 
-- `dart analyze`: <result or NOT RUN>
-- `dart test`: <result or NOT RUN>
-- Dart SDK version / OS: <...>
+- [ ] Documentation-only; no runtime behavior changed
+- [ ] Relevant tests run
+- [ ] Not tested
 
-## Checklist
+<!-- Optional: the command you ran and a one-line result. No full logs needed. -->
 
-- [ ] `dart analyze` reports no issues (as reported above)
-- [ ] `dart test` passes (as reported above; no tests deleted or skipped to make it pass)
-- [ ] No secrets, private keys, company code or personal data in the diff
-- [ ] Existing rule IDs, severities, the JSON report contract and exit codes 0/1/2 are unchanged (or the change is described and documented)
+## Additional notes
 
-### Only for a new or changed rule
+<!-- Optional. A maintainer may ask for SDK/OS details if a problem needs reproducing. -->
 
-- [ ] New diagnostic code is the next free one in its family and is not reused
-- [ ] Failing fixture (`fixtures/err_...`) triggers exactly that code, plus a corrected or ambiguous `ok_...` fixture
-- [ ] Test added/updated (fixture expectations with exact code, file, line and evidence)
-- [ ] `schema/rule-catalog.json` entry added and `docs/errors/WFxxxx.md` written (symptom, cause, scope, fix, fixture)
-- [ ] README rule table and `skills/widgetforge/SKILL.md` list the rule; `CHANGELOG.md` updated
+New rules, CLI behavior and JSON contract changes: see `CONTRIBUTING.md` in the repository root. Do not include secrets, company code or personal data.
