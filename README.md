@@ -37,7 +37,7 @@ widget package and also works for hand-written native widgets. It never modifies
 Five steps from a fresh machine (details and what was verified follow below):
 
 1. **Get the CLI** (needs a Dart SDK, 3.5 or newer): `git clone https://github.com/z0rimo/widgettriage.git && cd widgettriage && dart pub get`
-2. **Optional, recommended for agents:** build one executable, `dart compile exe bin/widgettriage.dart -o build/widgettriage`, and put `build/` on your `PATH` (or remember its full path).
+2. **Optional, recommended for agents:** build one executable, `mkdir -p build && dart compile exe bin/widgettriage.dart -o build/widgettriage`, and put `build/` on your `PATH` (or remember its full path).
 3. **Diagnose a Flutter project:** `dart run bin/widgettriage.dart doctor --json /path/to/flutter_project` (or `build/widgettriage doctor --json /path/to/flutter_project`). Exit code 0 = no errors, 1 = errors found, 2 = usage error or unusable input. The tool only reads; it never changes your project.
 4. **Optional, for Codex / Claude Code:** install the agent skill into your project from this checkout: `dart run scripts/install_agent_skill.dart --agent both --scope project --project /path/to/flutter_project` (add `--dry-run` first to preview; see [AI agent integration](#ai-agent-integration)). Run it from the checkout and name the Flutter project with `--project`; the checkout itself is refused as a target.
 5. **Ask your agent** about the widget problem. The skill tells it to run `widgettriage` from `PATH` or from a path you give it, so tell the agent where the executable is if it is not on `PATH`.
