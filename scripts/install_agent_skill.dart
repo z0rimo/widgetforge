@@ -56,6 +56,8 @@ class _Result {
   final String display;
   final Status status;
   final String? detail;
+  String?
+      via; // where the target really lives when a parent directory is a symbolic link
 }
 
 ArgParser _parser() => ArgParser()
@@ -88,6 +90,77 @@ ${_parser().usage}
 
 Existing files are never overwritten without --force. Nothing outside the widgettriage skill
 directory is modified. Exit codes: 0 ok, 1 conflict or failure, 2 usage error.''';
+
+/// A Windows absolute path: a drive letter (`C:\` or `C:/`) or a UNC prefix. A leading single
+/// slash (`/home/user`) is not accepted.
+final _windowsAbsolute = RegExp(r'^([A-Za-z]:[\\/]|\\\\)');
+
+/// Returns the user's home directory, or null when none is usable.
+///
+/// Candidates are `HOME` and then `USERPROFILE`; the first one that is non-empty and an existing
+/// directory wins, so a stale or foreign `HOME` falls back to `USERPROFILE`. On Windows a candidate
+/// must also be a Windows absolute path (drive letter or UNC), which rejects POSIX-style values
+/// such as `/home/user` that some shells export. Nothing is created.
+String? resolveHome(
+  Map<String, String> env, {
+  bool? isWindows,
+  bool Function(String)? isDirectory,
+}) {
+  final windows = isWindows ?? Platform.isWindows;
+  final exists = isDirectory ?? (String path) => Directory(path).existsSync();
+  for (final key in ['HOME', 'USERPROFILE']) {
+    final value = env[key] ?? '';
+    if (value.isEmpty) continue;
+    if (windows && !_windowsAbsolute.hasMatch(value)) continue;
+    if (exists(value)) return value;
+  }
+  return null;
+}
+
+/// Why [path] cannot be used as the project directory, or null when it can.
+String? projectDirProblem(String path) {
+  final type = FileSystemEntity.typeSync(path);
+  if (type == FileSystemEntityType.notFound) {
+    return 'Project directory does not exist: $path';
+  }
+  if (type != FileSystemEntityType.directory) {
+    return 'Project path is not a directory: $path';
+  }
+  try {
+    Directory(path).listSync();
+  } on FileSystemException {
+    return 'Cannot access project directory: $path';
+  }
+  return null;
+}
+
+/// Shows [path] relative to [from] in the style of [ctx] (default: this OS), optionally behind a
+/// prefix such as `~`, so a Windows path reads `~\.agents\skills` and a POSIX path `~/.agents/skills`.
+String displayPath(String path, String from, {String? prefix, p.Context? ctx}) {
+  final c = ctx ?? p.context;
+  final rel = c.relative(path, from: from);
+  return prefix == null ? rel : c.join(prefix, rel);
+}
+
+/// When a parent directory of [target] is a symbolic link, the files really go to the link's
+/// destination. Returns that real path, or null when [target] lives where it appears to.
+String? _resolvedElsewhere(String target, String basePath) {
+  try {
+    var existing = p.dirname(target);
+    final tail = <String>[p.basename(target)];
+    while (FileSystemEntity.typeSync(existing, followLinks: false) ==
+        FileSystemEntityType.notFound) {
+      tail.insert(0, p.basename(existing));
+      existing = p.dirname(existing);
+    }
+    final actual = p.joinAll([_real(existing), ...tail]);
+    final expected = p.joinAll(
+        [_real(basePath), ...p.split(p.relative(target, from: basePath))]);
+    return p.equals(actual, expected) ? null : actual;
+  } on FileSystemException {
+    return null;
+  }
+}
 
 /// Runs the installer. [source] is the skill directory to copy (default: `skills/widgettriage`
 /// next to this script). [env] supplies HOME/USERPROFILE; [cwd] is the default project directory.
@@ -137,25 +210,23 @@ int runInstaller(
   late final Directory base;
   late final String Function(String) show;
   if (scope == 'user') {
-    final home = (env['HOME'] ?? '').isNotEmpty
-        ? env['HOME']!
-        : (env['USERPROFILE'] ?? '');
-    if (home.isEmpty || !Directory(home).existsSync()) {
+    final home = resolveHome(env);
+    if (home == null) {
       err.writeln(
-          'install_agent_skill: cannot determine the home directory (HOME / USERPROFILE is unset or missing); '
-          'use --scope project instead.');
+          'install_agent_skill: cannot determine the home directory (HOME and USERPROFILE are unset, '
+          'not absolute paths, or not existing directories); use --scope project instead.');
       return 2;
     }
     base = Directory(home);
-    show = (path) => '~/${p.relative(path, from: home)}';
+    show = (path) => displayPath(path, home, prefix: '~');
   } else {
     final projectArg = opts['project'] as String?;
     final dir = Directory(projectArg == null
         ? cwd.path
         : p.normalize(p.absolute(cwd.path, projectArg)));
-    if (!dir.existsSync()) {
-      err.writeln(
-          'install_agent_skill: project directory does not exist: ${dir.path}');
+    final problem = projectDirProblem(dir.path);
+    if (problem != null) {
+      err.writeln('install_agent_skill: $problem');
       return 2;
     }
     final root = repoRoot;
@@ -166,7 +237,7 @@ int runInstaller(
       return 2;
     }
     base = dir;
-    show = (path) => p.relative(path, from: dir.path);
+    show = (path) => displayPath(path, dir.path);
   }
 
   out.writeln(
@@ -177,13 +248,18 @@ int runInstaller(
   final results = <_Result>[];
   for (final agent in agents) {
     final target = p.joinAll([base.path, ...agent.skillsDir, skillName]);
+    final elsewhere = _resolvedElsewhere(target, base.path);
+    final _Result result;
     try {
-      results.add(_installOne(agent, target, show(target), files,
-          dryRun: dryRun, force: force));
+      result = _installOne(agent, target, show(target), files,
+          dryRun: dryRun, force: force);
     } on FileSystemException catch (e) {
       results.add(_Result(agent, show(target), Status.failed,
-          '${e.message}${e.path == null ? '' : ' (${show(e.path!)})'}'));
+          '${e.message}${e.path == null ? '' : ' (${show(e.path!)})'}')
+        ..via = elsewhere);
+      continue;
     }
+    results.add(result..via = elsewhere);
   }
 
   for (final r in results) {
@@ -191,6 +267,10 @@ int runInstaller(
         '${r.agent.label.padRight(11)} ${r.status.text.padRight(17)} ${r.display}');
     if (r.detail != null) {
       (r.status.isProblem ? err : out).writeln('            ${r.detail}');
+    }
+    if (r.via != null) {
+      out.writeln(
+          '            note: a parent directory is a symbolic link; the files are at ${r.via}');
     }
   }
   final problems = results.where((r) => r.status.isProblem).length;

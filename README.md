@@ -198,7 +198,13 @@ dart run scripts/install_agent_skill.dart --agent both --scope project --project
 dart run scripts/install_agent_skill.dart --agent both --scope user
 ```
 
-`--agent` is `codex`, `claude` or `both` (default `both`); `--scope` is `project` (default) or `user`. It copies files from the checkout (no download, nothing runs on `dart pub get`), reports each agent separately (`INSTALLED`, `ALREADY INSTALLED`, `CONFLICT`, `FAILED`) and exits 1 if any target conflicted or failed. An existing different copy is never overwritten unless you pass `--force`, which replaces only that file inside the `widgettriage` skill directory and keeps the old one as `SKILL.md.bak`; symbolic links at the target are never followed or replaced. Check the result by looking at the printed paths, then start a new agent session. Tested on Linux only (macOS and Windows: not run).
+`--agent` is `codex`, `claude` or `both` (default `both`); `--scope` is `project` (default) or `user`. It copies files from the checkout (no download, nothing runs on `dart pub get`), reports each agent separately (`INSTALLED`, `ALREADY INSTALLED`, `CONFLICT`, `FAILED`) and exits 1 if any target conflicted or failed. An existing different copy is never overwritten unless you pass `--force`, which replaces only that file inside the `widgettriage` skill directory and keeps the old one as `SKILL.md.bak`; symbolic links at the target are never followed or replaced. Check the result by looking at the printed paths, then start a new agent session.
+
+- **Home directory (`--scope user`):** the first of `HOME`, then `USERPROFILE`, that is an existing directory is used (on Windows it must also be a drive-letter or UNC path, so a POSIX-style `HOME` such as `/home/user` is skipped). Nothing is created; if neither is usable the script stops with an error.
+- **Parent-directory symbolic links are followed.** If `.agents` or `.claude` (or a directory above the skill folder) is a symlink, for example to a shared dotfiles folder, the skill is installed where the link points, and the output says so. Installing there is your explicit request; existing files are still protected as described above. A symlink at the `widgettriage` folder itself is always a `CONFLICT`.
+- Windows PowerShell example: `dart run scripts\install_agent_skill.dart --agent both --scope project --project C:\path\to\flutter_project`.
+
+Tested on Linux and on Windows (10.0.26100, Windows PowerShell, Dart 3.8.0). On Windows the symbolic-link scenarios were skipped because creating symlinks there needs an elevated or developer-mode account. macOS: not run.
 
 Listing and selecting are different things: a skill in one of these locations is *discoverable* (both tools read its name and description), but whether the model then *chooses* it for a given prompt is the model's decision and is not guaranteed (see "What was tested").
 

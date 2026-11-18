@@ -95,7 +95,7 @@ void main() {
       expect(r.code, 0, reason: r.out + r.err);
       expect(
           File(skillPath(home.path, '.agents')).readAsStringSync(), original());
-      expect(r.out, contains('~/.agents/skills/widgettriage'));
+      expect(r.out, contains(p.join('~', '.agents', 'skills', 'widgettriage')));
     });
 
     test('Claude Code, user scope (Windows-style USERPROFILE only)', () {
@@ -302,6 +302,184 @@ void main() {
         skip: Platform.isWindows
             ? 'creating symlinks needs privileges on Windows'
             : false);
+  });
+
+  group('parent directory symlink (shared dotfiles style)', () {
+    late Directory external;
+    setUp(() {
+      external = Directory(p.join(tmp.path, 'shared-agents'))..createSync();
+      Link(p.join(project.path, '.agents')).createSync(external.path);
+    });
+
+    test(
+        'installs through the link, reports the real location, keeps existing files',
+        () {
+      final precious =
+          File(p.join(external.path, 'skills', 'other', 'SKILL.md'))
+            ..createSync(recursive: true)
+            ..writeAsStringSync('precious');
+      final r = run(['--agent', 'codex']);
+      expect(r.code, 0, reason: r.out + r.err);
+      expect(
+          File(p.join(external.path, 'skills', 'widgettriage', 'SKILL.md'))
+              .readAsStringSync(),
+          original());
+      expect(precious.readAsStringSync(), 'precious');
+      expect(r.out, contains('a parent directory is a symbolic link'));
+      expect(r.out, contains(p.join(external.path, 'skills', 'widgettriage')));
+    });
+
+    test('dry run writes nothing behind the link and still reports it', () {
+      final r = run(['--agent', 'codex', '--dry-run']);
+      expect(r.code, 0, reason: r.out + r.err);
+      expect(r.out, contains('WOULD INSTALL'));
+      expect(r.out, contains('a parent directory is a symbolic link'));
+      expect(external.listSync(), isEmpty);
+    });
+
+    test('no note when nothing is linked', () {
+      final r = run(['--agent', 'claude']);
+      expect(r.out, isNot(contains('symbolic link')));
+    });
+
+    test('a symlinked widgettriage directory is still a conflict', () {
+      final elsewhere = Directory(p.join(tmp.path, 'elsewhere'))..createSync();
+      Directory(p.join(external.path, 'skills')).createSync();
+      Link(p.join(external.path, 'skills', 'widgettriage'))
+          .createSync(elsewhere.path);
+      final r = run(['--agent', 'codex', '--force']);
+      expect(r.code, 1);
+      expect(r.out, contains('CONFLICT'));
+      expect(elsewhere.listSync(), isEmpty);
+    });
+  },
+      skip: Platform.isWindows
+          ? 'creating symlinks needs privileges on Windows'
+          : false);
+
+  group('resolveHome', () {
+    bool Function(String) dirs(Set<String> existing) => existing.contains;
+
+    test('HOME wins when valid', () {
+      expect(
+          resolveHome({'HOME': '/h', 'USERPROFILE': '/u'},
+              isWindows: false, isDirectory: dirs({'/h', '/u'})),
+          '/h');
+    });
+    test('empty HOME falls back to USERPROFILE', () {
+      expect(
+          resolveHome({'HOME': '', 'USERPROFILE': '/u'},
+              isWindows: false, isDirectory: dirs({'/u'})),
+          '/u');
+    });
+    test('HOME that is not an existing directory falls back to USERPROFILE',
+        () {
+      expect(
+          resolveHome({'HOME': '/gone', 'USERPROFILE': '/u'},
+              isWindows: false, isDirectory: dirs({'/u'})),
+          '/u');
+    });
+    test(
+        'Windows: a POSIX-style HOME is skipped even if that path happens to exist',
+        () {
+      expect(
+          resolveHome({'HOME': '/home/user', 'USERPROFILE': r'C:\Users\me'},
+              isWindows: true,
+              isDirectory: dirs({'/home/user', r'C:\Users\me'})),
+          r'C:\Users\me');
+    });
+    test('Windows: a real absolute HOME is used', () {
+      expect(
+          resolveHome({'HOME': r'D:\home', 'USERPROFILE': r'C:\Users\me'},
+              isWindows: true, isDirectory: dirs({r'D:\home', r'C:\Users\me'})),
+          r'D:\home');
+    });
+    test('Windows: invalid HOME and USERPROFILE give null', () {
+      expect(
+          resolveHome({'HOME': '/home/user', 'USERPROFILE': r'C:\missing'},
+              isWindows: true, isDirectory: dirs({'/home/user'})),
+          isNull);
+    });
+    test('neither set gives null; nothing is created', () {
+      expect(resolveHome({}, isWindows: false, isDirectory: dirs({})), isNull);
+    });
+    test('a HOME that is a file is not a home directory', () {
+      final f = File(p.join(tmp.path, 'afile'))..writeAsStringSync('x');
+      final r = run(['--scope', 'user'],
+          env: {'HOME': f.path, 'USERPROFILE': home.path});
+      expect(r.code, 0, reason: r.out + r.err);
+      expect(File(skillPath(home.path, '.agents')).existsSync(), isTrue);
+    });
+    test('both invalid: usage error naming both variables', () {
+      final r = run([
+        '--scope',
+        'user'
+      ], env: {
+        'HOME': p.join(tmp.path, 'no'),
+        'USERPROFILE': p.join(tmp.path, 'no2')
+      });
+      expect(r.code, 2);
+      expect(r.err, allOf(contains('HOME'), contains('USERPROFILE')));
+      expect(Directory(p.join(tmp.path, 'no')).existsSync(), isFalse);
+    });
+  });
+
+  group('--project errors', () {
+    test('a file is "not a directory"', () {
+      final f = File(p.join(tmp.path, 'projfile'))..writeAsStringSync('x');
+      final r = run(['--project', f.path]);
+      expect(r.code, 2);
+      expect(r.err, contains('Project path is not a directory'));
+      expect(r.err, isNot(contains('does not exist')));
+    });
+    test('a missing path "does not exist" and is not created', () {
+      final missing = p.join(tmp.path, 'missing');
+      final r = run(['--project', missing]);
+      expect(r.code, 2);
+      expect(r.err, contains('Project directory does not exist'));
+      expect(Directory(missing).existsSync(), isFalse);
+    });
+    test('an unreadable directory is "cannot access"', () {
+      final d = Directory(p.join(tmp.path, 'locked'))..createSync();
+      Process.runSync('chmod', ['000', d.path]);
+      addTearDown(() => Process.runSync('chmod', ['755', d.path]));
+      if (Process.runSync('id', ['-u']).stdout.toString().trim() == '0') {
+        markTestSkipped('running as root: permissions are not enforced');
+        return;
+      }
+      final r = run(['--project', d.path]);
+      expect(r.code, 2);
+      expect(r.err, contains('Cannot access project directory'));
+    }, skip: Platform.isWindows ? 'POSIX permissions' : false);
+  });
+
+  group('displayPath', () {
+    test('Windows style', () {
+      expect(
+          displayPath(
+              r'C:\Users\me\.agents\skills\widgettriage', r'C:\Users\me',
+              prefix: '~', ctx: p.windows),
+          r'~\.agents\skills\widgettriage');
+      expect(
+          displayPath(r'D:\proj\.claude\skills\widgettriage', r'D:\proj',
+              ctx: p.windows),
+          r'.claude\skills\widgettriage');
+    });
+    test('POSIX style', () {
+      expect(
+          displayPath('/home/me/.agents/skills/widgettriage', '/home/me',
+              prefix: '~', ctx: p.posix),
+          '~/.agents/skills/widgettriage');
+    });
+    test('real run prints the platform style and no absolute home path', () {
+      final r = run(['--agent', 'both', '--scope', 'user']);
+      expect(
+          r.out,
+          contains(displayPath(
+              p.join(home.path, '.claude', 'skills', 'widgettriage'), home.path,
+              prefix: '~')));
+      expect(r.out, isNot(contains(home.path)));
+    });
   });
 
   test('CLI entry point: --help and a real dry run from a script process', () {
