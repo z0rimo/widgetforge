@@ -74,6 +74,9 @@ body:
     id: actual
     attributes:
       label: Actual result
+      description: What WidgetTriage reported (the WF code and message), or that it reported nothing.
+    validations:
+      required: true
   - type: textarea
     id: json
     attributes:
