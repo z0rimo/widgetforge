@@ -1,5 +1,5 @@
-name: False positive / false negative
-description: A diagnostic that is wrong, or a problem WidgetTriage should have reported but did not
+name: Incorrect or missing diagnosis
+description: A diagnostic that looks wrong, or a widget setup problem WidgetTriage did not report
 title: "[Accuracy]: "
 body:
   - type: markdown
@@ -7,6 +7,8 @@ body:
       value: |
         Do not paste secrets, private keys, tokens, signing material, company or customer code, or personal data. Reduce your project to a minimal synthetic example first.
         A clean report only means the implemented checks found nothing. Please check the rule's page under `docs/errors/` for its documented scope first.
+        WidgetTriage is a static tool. You do not need to reproduce the problem on a device; say what you observed and how.
+        The JSON report contains `projectPath`, an absolute path that can include your user name; replace it before pasting.
   - type: dropdown
     id: kind
     attributes:
@@ -14,6 +16,7 @@ body:
       options:
         - False positive (reported, but the setup is fine)
         - False negative (a real problem was not reported)
+        - Not sure
     validations:
       required: true
   - type: dropdown
@@ -29,11 +32,9 @@ body:
   - type: input
     id: code
     attributes:
-      label: WF diagnostic code
-      description: The code that was reported, or the one you expected (for example WF2003).
+      label: WF diagnostic code (if any)
+      description: The code that was reported, or the one you expected (for example WF2003). Leave empty if you do not know which rule applies.
       placeholder: WF2003
-    validations:
-      required: true
   - type: input
     id: version
     attributes:
@@ -45,13 +46,11 @@ body:
     id: dart
     attributes:
       label: Dart SDK version and OS
-    validations:
-      required: true
   - type: textarea
     id: fixture
     attributes:
       label: Minimal reproduction fixture
-      description: The smallest synthetic project (file tree plus the relevant file contents) that shows the problem. Do not paste real app code.
+      description: The smallest synthetic project (the relevant file tree plus the relevant file contents, for example the manifest, provider XML and layout, or the Xcode project settings) that shows the problem. Do not paste real app code.
       render: text
     validations:
       required: true
@@ -59,20 +58,25 @@ body:
     id: expected
     attributes:
       label: Expected result
-      description: What you expected, and the documentation or real-build evidence that supports it.
+      description: What you expected, and the documentation or build evidence that supports it, if you have any.
     validations:
       required: true
+  - type: dropdown
+    id: evidence
+    attributes:
+      label: How do you know it is a problem?
+      options:
+        - Only from reading the configuration or documentation (static)
+        - Observed at build or install time
+        - Observed at runtime (emulator or device)
+        - Not sure
   - type: textarea
     id: actual
     attributes:
       label: Actual result
-    validations:
-      required: true
   - type: textarea
     id: json
     attributes:
       label: JSON output
       description: Output of `widgettriage doctor --json <path>` (or `verify --json`), with private paths removed.
       render: json
-    validations:
-      required: true

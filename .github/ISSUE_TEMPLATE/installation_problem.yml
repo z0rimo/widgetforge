@@ -15,6 +15,7 @@ body:
         - dart run bin/widgettriage.dart (from a checkout)
         - compiled executable (dart compile exe)
         - dart pub global activate (path or git)
+        - the agent skill installer (scripts/install_agent_skill.dart)
         - used by an AI agent / the agent skill
         - other
     validations:

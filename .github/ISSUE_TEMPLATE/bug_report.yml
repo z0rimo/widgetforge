@@ -1,12 +1,25 @@
 name: Bug report
-description: WidgetTriage crashes, hangs, exits with the wrong code, or prints invalid JSON
+description: The CLI or the agent skill installer crashes, hangs, exits with the wrong code, or prints invalid JSON
 title: "[Bug]: "
+labels: ["bug"]
 body:
   - type: markdown
     attributes:
       value: |
         Do not paste secrets, private keys, tokens, signing material, company or customer code, or personal data. Reduce your project to a minimal synthetic example first.
-        For wrong or missing diagnostics use the "False positive / false negative" form. For installation problems use the "Installation / CLI problem" form.
+        For wrong or missing diagnostics use the "Incorrect or missing diagnosis" form. For installation problems use the "Installation / CLI problem" form.
+        The JSON report contains `projectPath`, an absolute path that can include your user name; replace it before pasting.
+  - type: dropdown
+    id: component
+    attributes:
+      label: Which part is affected?
+      options:
+        - widgettriage doctor
+        - widgettriage verify
+        - Agent skill installer (scripts/install_agent_skill.dart)
+        - Other
+    validations:
+      required: true
   - type: input
     id: version
     attributes:
@@ -38,7 +51,7 @@ body:
     id: actual
     attributes:
       label: Actual behavior
-      description: Exit code, stdout and stderr (trim anything private).
+      description: The exit code (0, 1 or 2), stdout and stderr, trimmed of anything private. Exit code 2 prints a plain message on stderr and no JSON by design.
       render: text
     validations:
       required: true

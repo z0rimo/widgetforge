@@ -4,7 +4,7 @@ Thanks for helping. WidgetTriage is a read-only static diagnostics CLI; accuracy
 
 ## Before you open anything
 - Search existing issues. For a vulnerability, follow [.github/SECURITY.md](.github/SECURITY.md) and do not file a public issue.
-- Use the issue forms: bug, false positive / false negative, rule request, installation problem.
+- Use the issue forms: bug, incorrect or missing diagnosis, installation problem, feature request, rule request. A proposal for a new rule belongs in the rule request form; you do not need to reproduce a problem on a device to report a wrong or missing diagnosis.
 - Never attach secrets, private keys, tokens, company or customer code, or personal data. Reduce your case to a minimal synthetic project.
 
 ## Development
