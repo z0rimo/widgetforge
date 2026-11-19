@@ -84,37 +84,39 @@ Such mistakes are commonly associated with a widget that does not load, a widget
 
 ## Requirements and what has been verified
 
-Requires a Dart SDK that satisfies `environment.sdk` in `pubspec.yaml` (`^3.5.0`, i.e. Dart 3.5 or newer and below 4.0).
-**Main verification: Dart 3.8.0 (Flutter 3.32.0) on Linux.** On Dart 3.5.4 (Linux) `dart analyze` was clean and all 302 tests passed once; Dart 3.5.0 itself and other platforms were not tested.
-From a checkout of this repository (`git clone https://github.com/z0rimo/widgettriage.git`). A fresh clone of the repository was checked with Dart 3.8.0 (`dart pub get`, `dart analyze`, `dart test`, the commands below):
+Requires a Dart SDK that satisfies `environment.sdk` in `pubspec.yaml` (`^3.5.0`, i.e. Dart 3.5 or newer and below 4.0). Without `--json` a human-readable report is printed. `path` defaults to the current directory and must be a Flutter project root: it needs `pubspec.yaml` and at least one platform project, `android/app/src/main/AndroidManifest.xml` and/or `ios/*.xcodeproj/project.pbxproj`. `dart run bin/widgettriage.dart --help` and `--version` show usage and the version.
 
-```sh
-dart pub get
-dart run bin/widgettriage.dart doctor --json /path/to/flutter_project
-```
+### Verified for v0.3.0 (current)
 
-Without `--json` a human-readable report is printed. `path` defaults to the current directory and
-must be a Flutter project root: it needs `pubspec.yaml` and at least one platform project, `android/app/src/main/AndroidManifest.xml` and/or `ios/*.xcodeproj/project.pbxproj`.
+Release commit `0fb1309` (tag `v0.3.0`). "Not run" means exactly that, not "passes".
 
-```sh
-dart run bin/widgettriage.dart --help
-dart run bin/widgettriage.dart --version
-```
+| Environment | Run for v0.3.0 | Not run |
+|---|---|---|
+| **Linux (WSL2), Dart 3.8.0**, fresh clones | `dart pub get`, `dart analyze` (clean), `dart test` (347 passed, 6 skipped, 0 failed); all 78 fixture projects give the same `doctor` output as v0.2.0 apart from `tool.version`; compiled executable (`--version`, `doctor`; `verify` was run through `dart run`); `dart pub global activate --source git ... --git-ref v0.3.0` into a temporary pub cache (`widgettriage --version` = `0.3.0`, single JSON document on stdout, exit codes 0/1/2); agent skill installer scenarios (project and user scope, dry-run, re-install, conflict, `--force`, symlink conflict, partial failure) | other Dart versions |
+| **Windows 10.0.26100, PowerShell 5.1, Dart 3.8.0** | the same one-line git activation with `--git-ref v0.3.0`, `widgettriage --version`, `doctor --json` (exit 1 with `WF2004`, empty stderr) and a missing path (exit 2); the skill installer scenarios and its test file (37 passed, 8 skipped) were run earlier on the installer code that v0.3.0 ships unchanged | full `dart test`, `verify`, a compiled executable, symbolic-link scenarios (skipped: no symlink privilege) |
+| **macOS** | - | everything (NOT RUN) |
+| Dart 3.5.0 to 3.7.x | - | NOT RUN for v0.3.0 (a Dart 3.5.4 run of the v0.1.0 test suite is under "Earlier verification records") |
+| Agent skill selected by a model | - | NOT RUN for the current skill description |
 
 ### Running it: what has been verified
 
 With `--json`, stdout must be exactly one JSON document; errors and usage messages go to stderr.
-The first two rows were verified to meet that in every run tested (Dart SDK 3.8.0, Linux); the git row only partially, as stated; the last two rows are not suitable or not verified.
+Rows 1-3 were verified to meet that for v0.3.0 on Linux (Dart 3.8.0); the git row also on Windows PowerShell as stated; the last two rows are not suitable or not verified.
 
 | How | Status |
 |-----|--------|
-| `dart run bin/widgettriage.dart ...` | **Verified.** The supported development path. |
-| Native executable (JSON automation) | **Verified.** Build once, then call the binary directly: `dart pub get && mkdir -p build && dart compile exe bin/widgettriage.dart -o build/widgettriage`, then `build/widgettriage doctor --json <path>`. Same stdout and exit codes as `dart run`. |
-| `dart pub global activate --source git https://github.com/z0rimo/widgettriage.git` | **Verified once against the GitHub repository** on Linux with Dart 3.8.0 (installed from `main` at `93d9fa8` into a temporary pub cache: `widgettriage --version` printed `widgettriage 0.2.0` and `doctor --json` wrote a single JSON document to stdout). Not verified on macOS or Windows or with other SDK versions; check that stdout is one JSON document before relying on it. |
+| `dart run bin/widgettriage.dart ...` | **Verified** on Linux. The supported development path. |
+| Native executable (JSON automation) | **Verified** on Linux. Build once, then call the binary directly: `dart pub get && mkdir -p build && dart compile exe bin/widgettriage.dart -o build/widgettriage`, then `build/widgettriage doctor --json <path>`. Same stdout and exit codes as `dart run`. |
+| `dart pub global activate --source git https://github.com/z0rimo/widgettriage.git --git-ref v0.3.0` | **Verified for the `v0.3.0` tag** on Linux (temporary pub cache, resolved ref = release commit) and, for `--version`, `doctor --json` and a missing path, on Windows PowerShell (Dart 3.8.0). Not run on macOS or with other SDK versions; check that stdout is one JSON document before relying on it. |
 | `dart pub global activate --source path .` | **Not recommended for `--json`.** On Dart SDK 3.8.0 the generated launcher can print pub's `Resolving dependencies...` output to stdout in front of the JSON (see below). |
-| pub.dev (`dart pub global activate widgettriage`) | **Not verified.** The package is not published; no behaviour is guaranteed. |
+| pub.dev (`dart pub global activate widgettriage`) | **Not available.** The package is not published; no behaviour is guaranteed. |
 
-Checked (as WidgetForge v0.1.0, entry point `bin/widgetforge.dart`) from a fresh clone of the GitHub repository (Dart 3.8.0): `dart pub get`, `dart analyze`, `dart test`, `dart run bin/widgetforge.dart doctor --json <project>`. The renamed entry point `bin/widgettriage.dart` was re-run locally for v0.2.0 (not from a fresh clone). Not checked from a fresh clone: the compiled executable (checked from the same source tree) and the git-source activation above.
+### Earlier verification records (historical)
+
+Kept as written for the release they describe; they were not repeated for later releases.
+
+- **WidgetForge v0.1.0** (entry point `bin/widgetforge.dart`): main verification on Dart 3.8.0 (Flutter 3.32.0) on Linux from a fresh clone (`dart pub get`, `dart analyze`, `dart test`, `dart run bin/widgetforge.dart doctor --json <project>`). On Dart 3.5.4 (Linux) `dart analyze` was clean and all 302 tests of that release passed once; Dart 3.5.0 itself and other platforms were not tested. Git-source activation was then only checked against a throw-away local repository (clean JSON, 3 consecutive runs, Dart 3.8.0).
+- **WidgetTriage v0.2.0** (the rename): git activation from `main` at `93d9fa8` on Linux with Dart 3.8.0 into a temporary pub cache printed `widgettriage 0.2.0` and wrote a single JSON document to stdout; not verified on macOS or Windows at that time.
 
 #### Known issue: path-activated launcher on Dart SDK 3.8.0
 
