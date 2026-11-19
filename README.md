@@ -1,48 +1,88 @@
 # WidgetTriage
 
-**Read-only diagnostics CLI for Flutter home screen widgets on Android (AppWidget / RemoteViews) and iOS (WidgetKit extensions).**
+**Read-only diagnostics for Flutter home screen widgets on Android and iOS. Find widget setup mistakes before runtime, with structured JSON output for coding agents.**
 
-WidgetTriage statically inspects a Flutter project's `android/` and `ios/` folders and the project's Dart sources and
-reports configuration mistakes in these areas:
+[Latest release](https://github.com/z0rimo/widgettriage/releases/latest) · [Changelog](CHANGELOG.md) · [MIT License](LICENSE) · Dart SDK 3.5+ · [Issues](https://github.com/z0rimo/widgettriage/issues)
 
-- **Android:** `RemoteViews` widget layouts, `AppWidgetProvider` receivers and their provider XML, `AndroidManifest.xml`
-  wiring (including `android:exported`), and the Dart entrypoints of separate `FlutterActivity` classes.
-- **iOS:** WidgetKit extension targets in the Xcode project (`project.pbxproj`): embedding in the app, the extension
-  `Info.plist`, bundle identifier prefix, entitlements and App Groups, the `@main` entry point and the deployment target.
+- **Diagnose widget setup quickly.** One command checks the Android (AppWidget / RemoteViews, manifest, provider XML, Flutter entrypoints) and iOS (WidgetKit extension, plists, entitlements, App Groups) wiring that is spread over many files, and names the file, line, evidence and a fix for each finding (29 rules, `WF1001`-`WF7004`).
+- **Read-only.** It never modifies the project it inspects, and it does not build or run anything.
+- **Made for coding agents too.** Stable JSON on stdout (`--json`), exit codes 0/1/2, and an optional skill for Codex and Claude Code. You do not need an agent to use the CLI.
 
-Such mistakes are commonly associated with a widget that does not load, a widget missing from the launcher's picker or
-widget gallery, manifest-merger or signing/validation errors, or a blank secondary `FlutterActivity`. WidgetTriage is a
-static tool: it does not run the app, a build, a simulator or a device, so it does not observe those symptoms at runtime.
-Output is stable, machine-readable JSON designed to be consumed by AI coding agents as well as people. Android-only,
-iOS-only and combined Flutter projects are supported; a platform whose project files do not exist is simply not checked.
-
-It does not replace [`home_widget`](https://pub.dev/packages/home_widget). It does not depend on any
-widget package and also works for hand-written native widgets. It never modifies the project it inspects.
+It is a *static* tool: it does not render a widget, run the app, test on a device, find every runtime failure, or fix anything automatically. See [Limitations](#limitations).
 
 > WidgetTriage was formerly known as WidgetForge. The project was renamed in v0.2.0. Existing v0.1.0 releases and diagnostic codes remain preserved.
 
-> **Status: v0.3.0** (the checks and diagnostic codes are unchanged since v0.1.0; v0.2.0 was the rename, v0.3.0 adds the Agent Skill installer). Not published to pub.dev. Android checks are the most verified; iOS rules were exercised on one Xcode 26.6 / iOS 26.5 simulator sample ([docs/ios-validation.md](docs/ios-validation.md)); IPA verification is Experimental. Licensed under the [MIT License](LICENSE).
-
-## At a glance
-
-- **What:** a read-only CLI that checks a Flutter project's Android (AppWidget / RemoteViews) and iOS (WidgetKit) home screen widget configuration and prints stable, machine-readable diagnostics (29 rules, `WF1001`-`WF7004`).
-- **Solves:** the "why does my widget not show up / not load" class of setup mistakes: unregistered receivers, missing provider metadata or `android:exported`, unsupported RemoteViews classes, a WidgetKit extension that is not embedded, App Group or bundle-id mismatches. Each finding names the file, line, literal evidence and a fix.
-- **Why not just check by hand:** the same wiring is spread over manifests, provider XML, layouts, Xcode project files, plists and entitlements; the tool checks all of them in one run, repeatably, with evidence an AI coding agent can act on.
-- **Run:** `dart pub get && dart run bin/widgettriage.dart doctor --json <flutter_project_root>` ([Quick start](#quick-start)).
-- **Agents:** exit codes 0/1/2 and JSON-only stdout; [SKILL.md](skills/widgettriage/SKILL.md) tells Claude Code or Codex when and how to use it ([AI agent integration](#ai-agent-integration)).
-- **Not:** a renderer, a build, a runtime test or an auto-fixer. It never modifies the inspected project.
+> **Status: v0.3.0.** Not published to pub.dev; install from GitHub as below. Android checks are the most verified; iOS rules were exercised on one Xcode 26.6 / iOS 26.5 simulator sample ([docs/ios-validation.md](docs/ios-validation.md)); IPA verification is Experimental. Licensed under the [MIT License](LICENSE).
 
 ## Quick start
 
-Five steps from a fresh machine (details and what was verified follow below):
+**Prerequisites:** a Dart SDK, 3.5 or newer (verified with 3.8.0 on Linux; see [Running it: what has been verified](#running-it-what-has-been-verified)), and `git`.
 
-1. **Get the CLI** (needs a Dart SDK, 3.5 or newer): `git clone https://github.com/z0rimo/widgettriage.git && cd widgettriage && dart pub get`
-2. **Optional, recommended for agents:** build one executable, `mkdir -p build && dart compile exe bin/widgettriage.dart -o build/widgettriage`, and put `build/` on your `PATH` (or remember its full path).
-3. **Diagnose a Flutter project:** `dart run bin/widgettriage.dart doctor --json /path/to/flutter_project` (or `build/widgettriage doctor --json /path/to/flutter_project`). Exit code 0 = no errors, 1 = errors found, 2 = usage error or unusable input. The tool only reads; it never changes your project.
-4. **Optional, for Codex / Claude Code:** install the agent skill into your project from this checkout: `dart run scripts/install_agent_skill.dart --agent both --scope project --project /path/to/flutter_project` (add `--dry-run` first to preview; see [AI agent integration](#ai-agent-integration)). Run it from the checkout and name the Flutter project with `--project`; the checkout itself is refused as a target.
-5. **Ask your agent** about the widget problem. The skill tells it to run `widgettriage` from `PATH` or from a path you give it, so tell the agent where the executable is if it is not on `PATH`.
+**1. Install the CLI** from the `v0.3.0` tag (one line, works in Bash and PowerShell):
 
-What it does not do: render a widget, build the app, test on a device, diagnose every runtime failure, or fix anything automatically.
+```sh
+dart pub global activate --source git https://github.com/z0rimo/widgettriage.git --git-ref v0.3.0
+```
+
+Make sure pub's executable directory is on your `PATH` (`dart` prints the exact directory if it is not): usually `$HOME/.pub-cache/bin` on Linux and macOS and `%LOCALAPPDATA%\Pub\Cache\bin` on Windows. Then check it:
+
+```sh
+widgettriage --version
+```
+
+**2. Diagnose a Flutter project.** Run it in the project root (it needs `pubspec.yaml` and an `android/` and/or `ios/` project), or pass the path:
+
+```sh
+widgettriage doctor --json /path/to/flutter_project
+```
+
+Leave out `--json` for a human-readable report. Exit code `0` means no errors were reported, `1` means errors were found, `2` means a usage error or unusable input (message on stderr, no JSON).
+
+**3. Read the result.** For a project with a missing `android:exported` on a widget receiver, `widgettriage doctor` prints (real output from the repository's synthetic fixture `fixtures/err_receiver_missing_exported`, path line shortened):
+
+```text
+WidgetTriage doctor: <project>
+
+[ERROR] WF2004 Widget receiver with intent-filter lacks android:exported
+  at android/app/src/main/AndroidManifest.xml:16
+  evidence: <receiver android:name=".DemoWidgetProvider"> (no android:exported)
+  Apps targeting Android 12 (API 31) or higher must set android:exported explicitly on every component with an intent-filter; ...
+  fix: Add android:exported="true" to this <receiver>.
+  docs: docs/errors/WF2004.md
+
+1 error(s), 0 warning(s).
+```
+
+(exit code 1; the long explanation line is shortened here). A clean project prints `0 error(s), 0 warning(s).` and exits 0, which only means the implemented checks found nothing. The `--json` form of both cases is under [Example output](#example-output); how to read it is under [How to read a result](#how-to-read-a-result).
+
+**4. Optional: install the Agent Skill** for Codex and/or Claude Code. This is a separate step from the CLI: the skill only tells your agent when and how to call `widgettriage`. It needs a checkout of this repository, because the installer copies the skill from it:
+
+```sh
+git clone https://github.com/z0rimo/widgettriage.git
+cd widgettriage
+dart pub get
+dart run scripts/install_agent_skill.dart --agent both --scope project --project /path/to/flutter_project --dry-run
+```
+
+`--dry-run` only shows what would happen; run the same command without it to install into `<project>/.agents/skills/` (Codex) and `<project>/.claude/skills/` (Claude Code). Use `--agent codex` or `--agent claude` for one agent. An existing different copy is reported as a `CONFLICT` and left untouched unless you pass `--force`. Installing into your home directory (`--scope user`) is possible but changes settings shared by all your projects, so try a single project first. Details, paths and the name-collision note: [AI agent integration](#ai-agent-integration).
+
+### Install from a checkout instead
+
+Useful for development, or if you prefer a single executable that an agent can be pointed at:
+
+1. `git clone https://github.com/z0rimo/widgettriage.git && cd widgettriage && dart pub get`
+2. Optional: `mkdir -p build && dart compile exe bin/widgettriage.dart -o build/widgettriage` and put `build/` on your `PATH` (or remember its full path).
+3. `dart run bin/widgettriage.dart doctor --json /path/to/flutter_project` (or `build/widgettriage doctor --json /path/to/flutter_project`).
+
+## What it checks
+
+- **Android:** `RemoteViews` widget layouts, `AppWidgetProvider` receivers and their provider XML, `AndroidManifest.xml` wiring (including `android:exported`), and the Dart entrypoints of separate `FlutterActivity` classes.
+- **iOS:** WidgetKit extension targets in the Xcode project (`project.pbxproj`): embedding in the app, the extension `Info.plist`, bundle identifier prefix, entitlements and App Groups, the `@main` entry point and the deployment target.
+- **Built APK / IPA (`verify`):** the widget metadata inside a finished `.apk` (stable) or `.ipa` (Experimental). See [Verifying a built APK / IPA](#verifying-a-built-apk--ipa-verify).
+
+Such mistakes are commonly associated with a widget that does not load, a widget missing from the launcher's picker or widget gallery, manifest-merger or signing/validation errors, or a blank secondary `FlutterActivity`; WidgetTriage does not observe those symptoms at runtime. Android-only, iOS-only and combined Flutter projects are supported; a platform whose project files do not exist is simply not checked. It does not replace [`home_widget`](https://pub.dev/packages/home_widget), does not depend on any widget package and also works for hand-written native widgets. The full list of rules is under [What it detects](#what-it-detects).
+
+## Requirements and what has been verified
 
 Requires a Dart SDK that satisfies `environment.sdk` in `pubspec.yaml` (`^3.5.0`, i.e. Dart 3.5 or newer and below 4.0).
 **Main verification: Dart 3.8.0 (Flutter 3.32.0) on Linux.** On Dart 3.5.4 (Linux) `dart analyze` was clean and all 302 tests passed once; Dart 3.5.0 itself and other platforms were not tested.
@@ -269,6 +309,20 @@ dart run bin/widgettriage.dart verify --json build/app/outputs/flutter-apk/app-r
 - The projects in `fixtures/` reproduce the *configuration shape* of each error and are checked by the
   test suite; they have not been built with the Android toolchain.
 
+## FAQ
+
+**Does WidgetTriage modify my project?** No. `doctor` and `verify` only read files. The optional skill installer writes only inside the `widgettriage` skill folder of the agent directory you choose (see [AI agent integration](#ai-agent-integration)).
+
+**Do I need an AI agent to use it?** No. The CLI runs on its own and prints a human-readable report, or JSON with `--json`. The agent skill is optional.
+
+**Does it support both Android and iOS?** Yes, as static checks of the project files; iOS is newer and less verified (one Xcode / simulator sample). See [Limitations](#limitations).
+
+**Can it check a built APK?** Yes: `widgettriage verify --json app-release.apk` checks the widget metadata in the final manifest and resources (WF6xxx). `.ipa` support is Experimental and was tested with synthetic archives only; `.aab` is not supported.
+
+**Why exit code 1 or 2?** `1` means at least one `error` diagnostic was reported; the JSON on stdout says which. `2` means the tool could not do its job (bad arguments, not a Flutter project root, or an unsupported or unsafe archive); the reason is on stderr and there is no JSON. Warnings and notes never change the exit code.
+
+**Is it on pub.dev?** No. Install it from GitHub as shown in the [Quick start](#quick-start).
+
 ## Planned (not implemented)
 
 - Deeper iOS checks (Live Activities, App Intents, widget kinds/providers) and a finding (today only a note) for a missing `.appex` in IPA output.
@@ -294,6 +348,10 @@ To contribute a rule or report a false positive, start from a minimal standalone
 the Flutter version, Android SDK/AGP version, observed vs expected behaviour and a log excerpt with
 sensitive details removed. A new rule needs a failing fixture, a corrected fixture, a regression test,
 a schema entry and a `docs/errors/<code>.md` page.
+
+## Links
+
+[Releases](https://github.com/z0rimo/widgettriage/releases) · [Changelog](CHANGELOG.md) · [Agent skill](skills/widgettriage/SKILL.md) · [Rule pages](docs/errors/) · [Rule catalog](schema/rule-catalog.json) · [JSON Schema](schema/diagnostic-report.schema.json) · [Contributing](CONTRIBUTING.md) · [Security policy](.github/SECURITY.md) · [Issues](https://github.com/z0rimo/widgettriage/issues)
 
 ## License
 
