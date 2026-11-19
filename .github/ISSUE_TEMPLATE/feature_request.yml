@@ -1,0 +1,47 @@
+name: Feature request
+description: Suggest an improvement to the CLI, the reports or the agent skill (for a new diagnostic rule use "Rule request")
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not paste secrets, private keys, tokens, signing material, company or customer code, or personal data. Describe your case with a small synthetic example where possible.
+        WidgetTriage is a read-only static tool; it does not render widgets, run apps or edit projects, so requests are judged within that scope.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem are you trying to solve?
+      description: The real situation, not only the solution you have in mind.
+    validations:
+      required: true
+  - type: textarea
+    id: today
+    attributes:
+      label: What is hard or impossible today?
+      description: What you tried with the current version and what got in the way.
+  - type: textarea
+    id: expected
+    attributes:
+      label: What would you like to happen?
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives or workarounds
+      description: What you do instead, and why it is not enough.
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Related platform
+      options:
+        - Android
+        - iOS
+        - Both
+        - Not platform specific
+  - type: textarea
+    id: material
+    attributes:
+      label: Public examples or links
+      description: Links to public documentation or a public project that shows the need (only material that is safe to share).

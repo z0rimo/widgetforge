@@ -353,7 +353,7 @@ a schema entry and a `docs/errors/<code>.md` page.
 
 ## Links
 
-[Releases](https://github.com/z0rimo/widgettriage/releases) · [Changelog](CHANGELOG.md) · [Agent skill](skills/widgettriage/SKILL.md) · [Rule pages](docs/errors/) · [Rule catalog](schema/rule-catalog.json) · [JSON Schema](schema/diagnostic-report.schema.json) · [Contributing](CONTRIBUTING.md) · [Security policy](.github/SECURITY.md) · [Issues](https://github.com/z0rimo/widgettriage/issues)
+[Releases](https://github.com/z0rimo/widgettriage/releases) · [Changelog](CHANGELOG.md) · [Agent skill](skills/widgettriage/SKILL.md) · [Rule pages](docs/errors/) · [Rule catalog](schema/rule-catalog.json) · [JSON Schema](schema/diagnostic-report.schema.json) · [Contributing](CONTRIBUTING.md) · [Security policy](.github/SECURITY.md) · [Issues](https://github.com/z0rimo/widgettriage/issues) ([report a problem or idea](https://github.com/z0rimo/widgettriage/issues/new/choose))
 
 ## License
 
